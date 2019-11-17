@@ -7,6 +7,9 @@ export interface ConfigObject {
   os: string
 }
 
+/**
+ * Read the values of the inputs and operating system.
+ */
 export const loadConfig = (): ConfigObject => {
   const update_conda = core.getInput('update-conda') === 'true'
   const python_version = core.getInput('python-version')
