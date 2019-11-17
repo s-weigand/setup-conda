@@ -2,7 +2,9 @@ import { loadConfig } from '../src/load_config'
 import * as core from '@actions/core'
 
 const testEnvVars = {
-  'INPUT_PYTHON-VERSION': 'default'
+  'INPUT_UPDATE-CONDA': 'true',
+  'INPUT_PYTHON-VERSION': 'default',
+  'INPUT_CONDA-CHANNELS': 'conda-forge, anaconda'
 }
 
 describe('Reading of the config', () => {
@@ -20,7 +22,9 @@ describe('Reading of the config', () => {
 
   it('test config values', () => {
     const config = loadConfig()
+    expect(config.update_conda).toEqual(true)
     expect(config.python_version).toEqual('default')
+    expect(config.conda_channels).toEqual(['conda-forge', 'anaconda'])
     expect(config.os).toEqual(process.platform)
   })
 })
