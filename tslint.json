@@ -5,5 +5,5 @@
     "semicolon": [true, "never"],
     "quotemark": [true, "single", "jsx-single", "avoid-escape"]
   },
-  "linterOptions": { "exclude": ["src/init_conda.sh"] }
+  "linterOptions": { "exclude": ["src/activate_conda.sh"] }
 }

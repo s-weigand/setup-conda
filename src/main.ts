@@ -11,10 +11,11 @@ async function run(): Promise<void> {
       await download_miniconda(config)
       await install_conda(config)
     }
-    init_conda()
+    await init_conda(config)
   } catch (error) {
     core.setFailed(error.message)
   }
 }
 
+/* tslint:disable-next-line:no-floating-promises */
 run()

@@ -29,10 +29,9 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
       - uses: actions/checkout@v1
+      - run: python --version
       - run: npm ci
       - run: npm run release
       - uses: ./
       - run: conda --version
-      - run: conda init bash
-      - run: conda activate base
-      - run: python --version
+      - run: python -c "import sys;print(sys.executable)"
