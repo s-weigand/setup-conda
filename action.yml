@@ -3,8 +3,11 @@ description: 'Provide a description here'
 author: 'Sebastian Weigand'
 inputs:
   python-version:
-    description: 'input description here'
+    description: 'Python version which should be installed with conda'
     default: 'default'
+  conda-channels:
+    description: 'Additional channels like conda-forge which can be used to install packages'
+    default: ''
 
 runs:
   using: 'node12'
