@@ -15,9 +15,6 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm test
-        with:
-          conda-version: 'latest'
-          python-version: 'default'
 
   test-integration:
     runs-on: ${{ matrix.os }}

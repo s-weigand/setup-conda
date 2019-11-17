@@ -7,7 +7,7 @@ export interface ConfigObject {
 }
 
 export const loadConfig = (): ConfigObject => {
-  const conda_version: string = core.getInput('conda-version', {
+  const conda_version = core.getInput('conda-version', {
     required: true
   })
   const python_version = core.getInput('python-version', {
