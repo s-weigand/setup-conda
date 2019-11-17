@@ -2,6 +2,9 @@ name: 'setup-conda'
 description: 'Provide a description here'
 author: 'Sebastian Weigand'
 inputs:
+  update-conda:
+    description: 'If conda should be updated before running other commands'
+    default: 'false'
   python-version:
     description: 'Python version which should be installed with conda'
     default: 'default'

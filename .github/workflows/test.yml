@@ -34,6 +34,7 @@ jobs:
       - run: npm run release
       - uses: ./
         with:
-          python-version: 3.8
+          update-conda: true
+          python-version: 3.6
       - run: conda --version
       - run: python -c "import sys;print(sys.executable)"

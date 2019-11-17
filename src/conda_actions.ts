@@ -15,6 +15,7 @@ const binDir = (installDir: string, config: ConfigObject): string => {
 export const setup_conda = async (config: ConfigObject): Promise<void> => {
   await addCondaToPath(config)
   await activate_conda(config)
+  await update_conda(config)
   await install_python(config)
 }
 
@@ -31,6 +32,12 @@ const activate_conda = async (config: ConfigObject): Promise<void> => {
     await exec.exec('activate.bat', ['base'])
   } else {
     await exec.exec('bash', ['src/activate_conda.sh'])
+  }
+}
+
+const update_conda = async (config: ConfigObject): Promise<void> => {
+  if (config.update_conda) {
+    await exec.exec('conda', ['update', '-y', 'conda'])
   }
 }
 
