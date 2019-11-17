@@ -6,11 +6,11 @@ This action sets up conda so it can be used in other actions, like you would in 
 
 ## Inputs
 
-| Name             | Requirement | Description                                                                                  |
-| ---------------- | ----------- | -------------------------------------------------------------------------------------------- |
-| `update-conda`   | _optional_  | If conda should be updated before running other commands (`Default: false`)                  |
-| `python-version` | _optional_  | Python version which should be installed with conda (`Default: 'default'`)                   |
-| `conda-channels` | _optional_  | Additional channels like 'conda-forge' which can be used to install packages (`Default: ''`) |
+| Name             | Requirement | Description                                                                                                           |
+| ---------------- | ----------- | --------------------------------------------------------------------------------------------------------------------- |
+| `update-conda`   | _optional_  | If conda should be updated before running other commands (`Default: false`)                                           |
+| `python-version` | _optional_  | Python version which should be installed with conda (`Default: 'default'`)                                            |
+| `conda-channels` | _optional_  | Additional channels like 'conda-forge', as coma separated list, which can be used to install packages (`Default: ''`) |
 
 # Usage
 
@@ -21,7 +21,7 @@ Basic:
 ```yaml
 steps:
   - uses: actions/checkout@master
-  - uses: s-weigand/setup-conda@v1
+  - uses: s-weigand/setup-conda@master
   - run: conda --version
   - run: which python
 ```
@@ -39,7 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Setup conda
-        uses: s-weigand/setup-conda@v1
+        uses: s-weigand/setup-conda@master
         with:
           update-conda: true
           python-version: 3.6

@@ -1,6 +1,6 @@
 {
   "name": "setup-conda",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "description": "Github Action to install conda",
   "main": "dist/index.js",
