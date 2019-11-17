@@ -1,4 +1,4 @@
-name: "Test typescript-action"
+name: 'Test'
 on:
   pull_request:
   push:
@@ -7,14 +7,24 @@ on:
       - 'releases/*'
 
 jobs:
-  test:
+  jest-tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+      - uses: actions/checkout@v1
 
-    - run: npm ci
-    - run: npm run build
-    - run: npm test
-    - uses: ./
-      with: 
-        milliseconds: 1000
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+        with:
+          conda-version: 'latest'
+          python-version: 'default'
+
+  test-integration:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    steps:
+      - uses: actions/checkout@v1
+      - uses: ./
+      - run: conda --version

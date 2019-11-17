@@ -1,10 +1,14 @@
-name: 'Your name here'
+name: 'setup-conda'
 description: 'Provide a description here'
-author: 'Your name or organization here'
+author: 'Sebastian Weigand'
 inputs:
-  myInput:              # change this
+  conda-version:
+    description: 'Which conda version to use (default: latest)'
+    required: true
+    default: 'latest'
+  python-version:
     description: 'input description here'
-    default: 'default value if applicable'
+    default: 'default'
 runs:
   using: 'node12'
-  main: 'lib/main.js'
+  main: 'dist/main.js'

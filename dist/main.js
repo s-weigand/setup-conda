@@ -16,16 +16,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(require("@actions/core"));
-const wait_1 = require("./wait");
+const load_config_1 = require("./load_config");
+const download_1 = require("./download");
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const ms = core.getInput('milliseconds');
-            console.log(`Waiting ${ms} milliseconds ...`);
-            core.debug((new Date()).toTimeString());
-            wait_1.wait(parseInt(ms));
-            core.debug((new Date()).toTimeString());
-            core.setOutput('time', new Date().toTimeString());
+            const config = load_config_1.loadConfig();
+            yield download_1.download_miniconda(config);
+            yield download_1.install_conda(config);
         }
         catch (error) {
             core.setFailed(error.message);

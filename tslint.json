@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "tslint-config-standard",
+    "tslint-config-prettier"
+  ],
+  "rules": {
+    "variable-name": [true, "check-format", "allow-snake-case"],
+    "semicolon": [true, "never"],
+    "quotemark": [true, "single", "jsx-single", "avoid-escape"]
+  }
+}
