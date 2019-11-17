@@ -36,6 +36,6 @@ jobs:
         with:
           update-conda: true
           python-version: 3.8
-          conda-channels: conda-forge, anaconda
+          conda-channels: anaconda, conda-forge
       - run: conda --version
       - run: python -c "import sys;print(sys.executable);print(sys.version_info)"
