@@ -15,6 +15,7 @@ const binDir = (installDir: string, config: ConfigObject): string => {
 export const setup_conda = async (config: ConfigObject): Promise<void> => {
   await addCondaToPath(config)
   await activate_conda(config)
+  await chown_conda_macOs(config)
   await update_conda(config)
   await install_python(config)
 }
@@ -32,6 +33,26 @@ const activate_conda = async (config: ConfigObject): Promise<void> => {
     await exec.exec('activate.bat', ['base'])
   } else {
     await exec.exec('bash', ['src/activate_conda.sh'])
+  }
+}
+/**
+ * This is to prevent a bug not allowing to install
+ * conda packages on the maxOs runner,
+ * since the config and miniconda belong to a different user.
+ *
+ * @param config Configuratetion of the action
+ */
+const chown_conda_macOs = async (config: ConfigObject): Promise<void> => {
+  if (config.os === 'darwin') {
+    const config_path = path.join(process.env.HOME as string, '.conda')
+    const user_name = process.env.USER
+    await exec.exec('sudo', ['chown', '-R', `${user_name}:staff`, config_path])
+    await exec.exec('sudo', [
+      'chown',
+      '-R',
+      `${user_name}:staff`,
+      process.env.CONDA as string
+    ])
   }
 }
 
