@@ -16,6 +16,7 @@ export const setup_conda = async (config: ConfigObject): Promise<void> => {
   await addCondaToPath(config)
   await activate_conda(config)
   await chown_conda_macOs(config)
+  await add_conda_channels(config)
   await update_conda(config)
   await install_python(config)
 }
@@ -35,6 +36,13 @@ const activate_conda = async (config: ConfigObject): Promise<void> => {
     await exec.exec('bash', ['src/activate_conda.sh'])
   }
 }
+
+const add_conda_channels = async (config: ConfigObject): Promise<void> => {
+  for (let channel of config.conda_channels) {
+    await exec.exec('conda', ['config', '--add', 'channels', channel])
+  }
+}
+
 /**
  * This is to prevent a bug not allowing to install
  * conda packages on the maxOs runner,
