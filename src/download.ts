@@ -29,11 +29,8 @@ const condaInstructionsWin: CondaInstructions = {
     `https://repo.anaconda.com/miniconda/Miniconda3-${conda_version}-Windows-x86_64.exe`,
   local_path: 'Miniconda3.exe',
   install_cmd: {
-    command: 'start',
+    command: 'Miniconda3.exe',
     options: [
-      '/wait',
-      '""',
-      'Miniconda3.exe',
       '/InstallationType=JustMe',
       '/RegisterPython=0',
       '/S',
@@ -44,7 +41,7 @@ const condaInstructionsWin: CondaInstructions = {
 
 const condaInstructionsOsX: CondaInstructions = {
   download_url: conda_version =>
-    `https://repo.anaconda.com/miniconda/Miniconda3-${conda_version}-Linux-x86_64.sh`,
+    `https://repo.anaconda.com/miniconda/Miniconda3-${conda_version}-MacOSX-x86_64.sh`,
   local_path: '~/miniconda.sh',
   install_cmd: {
     command: 'bash',
@@ -77,13 +74,20 @@ export const download_miniconda = async (
 ): Promise<void> => {
   const instruction = get_instructions(config)
   const download_url = instruction.download_url(config.conda_version)
+  console.log('Downloading Miniconda from: ', download_url)
   const minconda_download_path = await tc.downloadTool(download_url)
   await io.mv(minconda_download_path, instruction.local_path)
 }
 
 export const install_conda = async (config: ConfigObject): Promise<void> => {
+  console.log('Installing Miniconda')
   const instruction = get_instructions(config)
   const command = instruction.install_cmd.command
   const option = instruction.install_cmd.options
   await exec.exec(command, option)
+  if (config.os !== 'win32') {
+    const home_dir = process.env.HOME
+    await exec.exec('bash', ['src/init_conda.sh'])
+    // await exec.exec('bash', ['source', `${home_dir}/.bash_profile`])
+  }
 }

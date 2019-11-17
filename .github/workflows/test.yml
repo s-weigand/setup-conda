@@ -14,7 +14,12 @@ jobs:
 
       - run: npm ci
       - run: npm run build
-      - run: npm test
+      - name: Checking format
+        run: npm run format-check
+      - name: Linting code
+        run: npm run lint
+      - name: Running jest tests
+        run: npm test
 
   test-integration:
     runs-on: ${{ matrix.os }}
@@ -23,5 +28,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
       - uses: actions/checkout@v1
+      - run: npm ci
+      - run: npm run release
       - uses: ./
       - run: conda --version

@@ -94,3 +94,6 @@ typings/
 
 # vscode config
 .vscode
+
+# ignore none relevat js files
+lib
