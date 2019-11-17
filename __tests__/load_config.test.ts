@@ -3,7 +3,8 @@ import * as core from '@actions/core'
 
 const testEnvVars = {
   'INPUT_CONDA-VERSION': 'latest',
-  'INPUT_PYTHON-VERSION': 'default'
+  'INPUT_PYTHON-VERSION': 'default',
+  INPUT_REDOWNLOAD: 'false'
 }
 
 describe('Reading of the config', () => {
@@ -24,5 +25,6 @@ describe('Reading of the config', () => {
     expect(config.conda_version).toEqual('latest')
     expect(config.python_version).toEqual('default')
     expect(config.os).toEqual(process.platform)
+    expect(config.redownload).toEqual(false)
   })
 })

@@ -21,9 +21,10 @@ jobs:
       - name: Running jest tests
         run: npm test
 
-  test-integration:
+  test-integration-default:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
@@ -32,3 +33,6 @@ jobs:
       - run: npm run release
       - uses: ./
       - run: conda --version
+      - run: conda init bash
+      - run: conda activate base
+      - run: python --version

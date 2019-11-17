@@ -6,9 +6,7 @@ if [ -e ~/.bash_profile ]
 then
   echo "running source ~/.bash_profile"
   source ~/.bash_profile
-fi
-
-if [ -e ~/.bashrc ]
+elif [ -e ~/.bashrc ]
 then
   echo "running source ~/.bashrc"
   source ~/.bashrc

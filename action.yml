@@ -9,6 +9,11 @@ inputs:
   python-version:
     description: 'input description here'
     default: 'default'
+  redownload:
+    description: 'If miniconda should be redownloaded (default: false)'
+    required: true
+    default: false
+
 runs:
   using: 'node12'
   main: 'dist/index.js'
