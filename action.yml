@@ -2,17 +2,9 @@ name: 'setup-conda'
 description: 'Provide a description here'
 author: 'Sebastian Weigand'
 inputs:
-  conda-version:
-    description: 'Which conda version to use (default: latest)'
-    required: true
-    default: 'latest'
   python-version:
     description: 'input description here'
     default: 'default'
-  redownload:
-    description: 'If miniconda should be redownloaded (default: false)'
-    required: true
-    default: false
 
 runs:
   using: 'node12'

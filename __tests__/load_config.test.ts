@@ -2,9 +2,7 @@ import { loadConfig } from '../src/load_config'
 import * as core from '@actions/core'
 
 const testEnvVars = {
-  'INPUT_CONDA-VERSION': 'latest',
-  'INPUT_PYTHON-VERSION': 'default',
-  INPUT_REDOWNLOAD: 'false'
+  'INPUT_PYTHON-VERSION': 'default'
 }
 
 describe('Reading of the config', () => {
@@ -22,9 +20,7 @@ describe('Reading of the config', () => {
 
   it('test config values', () => {
     const config = loadConfig()
-    expect(config.conda_version).toEqual('latest')
     expect(config.python_version).toEqual('default')
     expect(config.os).toEqual(process.platform)
-    expect(config.redownload).toEqual(false)
   })
 })
