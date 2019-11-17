@@ -1,5 +1,6 @@
 import * as os from 'os'
 import * as path from 'path'
+import * as temp from 'temp'
 import * as exec from '@actions/exec'
 import * as core from '@actions/core'
 
@@ -56,7 +57,12 @@ const activate_conda = async (config: ConfigObject): Promise<void> => {
   if (config.os === 'win32') {
     await exec.exec('activate.bat', ['base'])
   } else {
-    await exec.exec('bash', ['src/activate_conda.sh'])
+    // write temp shell script to activate conda
+    temp.track()
+    const stream = temp.createWriteStream({ suffix: '.sh' })
+    stream.write('source activate base')
+    stream.end()
+    await exec.exec('bash', [stream.path as string])
   }
 }
 
