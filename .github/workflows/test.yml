@@ -1,25 +1,37 @@
-name: "Test"
+name: 'Test'
 on:
   pull_request:
   push:
     branches:
       - master
-      - "releases/*"
+      - 'releases/*'
 
 jobs:
   jest-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-
-      - run: npm ci
-      - run: npm run build
+      - name: Install Dependencies
+        run: npm ci
+      - name: Test Build
+        run: npm run build
       - name: Checking format
         run: npm run format-check
       - name: Linting code
         run: npm run lint
       - name: Running jest tests
         run: npm test
+
+  release-up-to-date:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install Dependencies
+        run: npm ci
+      - name: Create fresh build release  compare file
+        run: npm run release-compare-file
+      - name: Test if the release and compare file are different
+        run: diff dist/index.js compare/index.js
 
   test-integration-default:
     runs-on: ${{ matrix.os }}
@@ -31,7 +43,7 @@ jobs:
       - uses: actions/checkout@v1
       - name: Check initial python version
         run: python --version
-      - name: install Dependencies
+      - name: Install Dependencies
         run: npm ci
       - name: Build index.js
         run: npm run release

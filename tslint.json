@@ -4,6 +4,5 @@
     "variable-name": [true, "check-format", "allow-snake-case"],
     "semicolon": [true, "never"],
     "quotemark": [true, "single", "jsx-single", "avoid-escape"]
-  },
-  "linterOptions": { "exclude": ["src/activate_conda.sh"] }
+  }
 }
