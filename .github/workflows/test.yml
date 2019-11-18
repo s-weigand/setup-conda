@@ -26,7 +26,7 @@ jobs:
       - name: Create fresh build release  compare file
         run: npm run release-compare-file
       - name: Test if the release and compare file are different
-        run: diff dist/index.js compare/index.js
+        run: diff -qywBd dist/index.js compare/index.js
 
   test-integration-default:
     runs-on: ${{ matrix.os }}
