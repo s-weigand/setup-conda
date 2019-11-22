@@ -1,4 +1,4 @@
-name: "Test"
+name: 'Test'
 on: [push, pull_request]
 
 jobs:
@@ -32,7 +32,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     needs: [jest-tests, release-up-to-date]
     strategy:
-      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
@@ -57,7 +56,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     needs: [jest-tests, release-up-to-date]
     strategy:
-      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
@@ -82,15 +80,20 @@ jobs:
           python --version
           python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
 
-  test-integration-no-activation:
-    runs-on: ubuntu-latest
+  test-no-activation:
+    runs-on: ${{ matrix.os }}
     needs: [jest-tests, release-up-to-date]
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
       - uses: actions/checkout@v1
       - name: Check initial python version
         run: |
           python --version
           python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
+      - name: Check env
+        run: printenv
       - name: install Dependencies
         run: npm ci
       - name: Build index.js
@@ -104,3 +107,39 @@ jobs:
         run: |
           python --version
           python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
+      - name: Check env
+        run: printenv
+
+  test-no-activation-setup-python:
+    runs-on: ${{ matrix.os }}
+    needs: [jest-tests, release-up-to-date]
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - name: Check initial python version
+        run: |
+          python --version
+          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
+      - name: Check env
+        run: printenv
+      - name: install Dependencies
+        run: npm ci
+      - name: Build index.js
+        run: npm run release
+      - uses: ./
+        with:
+          activate-conda: false
+      - name: Check conda version
+        run: conda --version
+      - name: Check final python version
+        run: |
+          python --version
+          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
+      - name: Check env
+        run: printenv

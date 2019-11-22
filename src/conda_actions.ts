@@ -1,5 +1,6 @@
 import * as os from 'os'
 import * as path from 'path'
+import * as fs from 'fs'
 import * as temp from 'temp'
 import * as exec from '@actions/exec'
 import * as core from '@actions/core'
@@ -12,14 +13,14 @@ import { ConfigObject } from './load_config'
  * @param config Configuration of the action
  */
 export const setup_conda = async (config: ConfigObject): Promise<void> => {
+  const initialPythonLocation = await get_python_location()
   await addCondaToPath(config)
-  if (config.activate_conda) {
-    await activate_conda(config)
-  }
+  await activate_conda(config)
   await chown_conda_macOs(config)
   await add_conda_channels(config)
   await update_conda(config)
   await install_python(config)
+  await reset_base_python(config, initialPythonLocation)
 }
 
 /**
@@ -55,7 +56,7 @@ const addCondaToPath = async (config: ConfigObject): Promise<void> => {
  * @param config Configuration of the action
  */
 const activate_conda = async (config: ConfigObject): Promise<void> => {
-  console.log('Activation conda base')
+  console.log('Activating conda base')
   if (config.os === 'win32') {
     await exec.exec('activate.bat', ['base'])
   } else {
@@ -68,15 +69,59 @@ const activate_conda = async (config: ConfigObject): Promise<void> => {
   }
 }
 
+const get_python_location = async (): Promise<string> => {
+  let pythonLocation = ''
+
+  const options = { listeners: {} }
+  options.listeners = {
+    stdout: (data: Buffer) => {
+      console.log('stdout', data.toString())
+      pythonLocation += data.toString()
+    }
+  }
+  await exec.exec('which', ['python'], options)
+  return pythonLocation
+}
+
+/**
+ * Sets the python version back to the default version
+ *
+ * @param config Configuration of the action
+ */
+const reset_base_python = async (
+  config: ConfigObject,
+  initialPythonLocation: string
+): Promise<void> => {
+  if (config.activate_conda !== true) {
+    let pythonLocation = ''
+    if (process.env.pythonLocation) {
+      console.log('Using ')
+      pythonLocation = process.env.pythonLocation
+    } else {
+      pythonLocation = path.normalize(path.join(initialPythonLocation, '..'))
+
+      if (config.os === 'win32') {
+        pythonLocation = pythonLocation.replace(/^\\c/, 'C:')
+      }
+    }
+    console.log('Resetting Python to default version at:')
+    console.log(pythonLocation)
+    core.addPath(pythonLocation)
+    core.addPath(get_bin_dir(pythonLocation, config))
+  }
+}
+
 /**
  * Adds channels to the configuration of conda.
  *
  * @param config Configuration of the action
  */
 const add_conda_channels = async (config: ConfigObject): Promise<void> => {
-  console.log('Adding conda-channels')
   for (let channel of config.conda_channels) {
-    await exec.exec('conda', ['config', '--add', 'channels', channel])
+    if (channel !== '') {
+      console.log('Adding conda-channels')
+      await exec.exec('conda', ['config', '--add', 'channels', channel])
+    }
   }
 }
 
@@ -108,8 +153,8 @@ const chown_conda_macOs = async (config: ConfigObject): Promise<void> => {
  * @param config Configuration of the action
  */
 const update_conda = async (config: ConfigObject): Promise<void> => {
-  console.log('Updating conda')
   if (config.update_conda) {
+    console.log('Updating conda')
     await exec.exec('conda', ['update', '-y', 'conda'])
   }
 }
@@ -120,9 +165,9 @@ const update_conda = async (config: ConfigObject): Promise<void> => {
  * @param config Configuration of the action
  */
 const install_python = async (config: ConfigObject): Promise<void> => {
-  console.log(`Installing python ${config.python_version}`)
   const python_version = config.python_version
   if (python_version !== 'default') {
+    console.log(`Installing python ${config.python_version}`)
     if (python_version.match(/^\d+\.\d+(\.\d+)?$/) !== null) {
       await exec.exec('conda', [
         'install',
