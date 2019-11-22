@@ -38,7 +38,9 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Check initial python version
-        run: python --version
+        run: |
+          python --version
+          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
       - name: Install Dependencies
         run: npm ci
       - name: Build index.js
@@ -49,7 +51,7 @@ jobs:
       - name: Check final python version
         run: |
           python --version
-          python -c "import sys;print(sys.executable);print(sys.version_info)"
+          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
 
   test-integration-custom:
     runs-on: ${{ matrix.os }}
@@ -61,7 +63,9 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Check initial python version
-        run: python --version
+        run: |
+          python --version
+          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
       - name: install Dependencies
         run: npm ci
       - name: Build index.js
@@ -76,7 +80,7 @@ jobs:
       - name: Check final python version
         run: |
           python --version
-          python -c "import sys;print(sys.executable);print(sys.version_info)"
+          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
 
   test-integration-no-activation:
     runs-on: ubuntu-latest
@@ -84,7 +88,9 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Check initial python version
-        run: python --version
+        run: |
+          python --version
+          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
       - name: install Dependencies
         run: npm ci
       - name: Build index.js
@@ -97,4 +103,4 @@ jobs:
       - name: Check final python version
         run: |
           python --version
-          python -c "import sys;print(sys.executable);print(sys.version_info)"
+          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
