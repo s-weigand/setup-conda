@@ -13,7 +13,9 @@ import { ConfigObject } from './load_config'
  */
 export const setup_conda = async (config: ConfigObject): Promise<void> => {
   await addCondaToPath(config)
-  await activate_conda(config)
+  if (config.activate_conda) {
+    await activate_conda(config)
+  }
   await chown_conda_macOs(config)
   await add_conda_channels(config)
   await update_conda(config)

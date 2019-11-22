@@ -2,14 +2,21 @@ name: 'setup-conda'
 description: 'Setup conda to use in later actions'
 author: 'Sebastian Weigand'
 inputs:
+  activate-conda:
+    description: "Wether to activate the conda base env (Default: 'true')"
+    required: false
+    default: 'true'
   update-conda:
-    description: "If conda should be updated before running other commands (default: 'false')"
+    description: "If conda should be updated before running other commands (Default: 'false')"
+    required: false
     default: 'false'
   python-version:
-    description: "Python version which should be installed with conda (default: 'default')"
+    description: "Python version which should be installed with conda (default: 'Default')"
+    required: false
     default: 'default'
   conda-channels:
     description: "Additional channels like 'conda-forge' which can be used to install packages"
+    required: false
     default: ''
 
 runs:

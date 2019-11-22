@@ -1,6 +1,6 @@
 # setup-conda
 
-[![](https://github.com/s-weigand/setup-conda/workflows/Test/badge.svg)](https://github.com/s-weigand/setup-conda/actions)
+[![Tests](https://github.com/s-weigand/setup-conda/workflows/Test/badge.svg)](https://github.com/s-weigand/setup-conda/actions)
 
 This action sets up conda so it can be used in other actions, like you would in a terminal locally.
 
@@ -8,6 +8,7 @@ This action sets up conda so it can be used in other actions, like you would in 
 
 | Name             | Requirement | Description                                                                                                           |
 | ---------------- | ----------- | --------------------------------------------------------------------------------------------------------------------- |
+| `activate-conda` | _optional_  | Wether to activate the conda base env (`Default: true`)                                                               |
 | `update-conda`   | _optional_  | If conda should be updated before running other commands (`Default: false`)                                           |
 | `python-version` | _optional_  | Python version which should be installed with conda (`Default: 'default'`)                                            |
 | `conda-channels` | _optional_  | Additional channels like 'conda-forge', as coma separated list, which can be used to install packages (`Default: ''`) |
@@ -16,7 +17,7 @@ This action sets up conda so it can be used in other actions, like you would in 
 
 See [action.yml](action.yml)
 
-Basic:
+## Basic:
 
 ```yaml
 steps:
@@ -26,7 +27,7 @@ steps:
   - run: which python
 ```
 
-Matrix Testing:
+## Matrix Testing:
 
 ```yaml
 jobs:
@@ -35,14 +36,15 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
-    name: Python ${{ matrix.python-version }} sample
+        python-version: [3.6, 3.7, 3.8]
+    name: Python ${{ matrix.python-version }} example
     steps:
       - uses: actions/checkout@master
       - name: Setup conda
         uses: s-weigand/setup-conda@master
         with:
           update-conda: true
-          python-version: 3.6
+          python-version: ${{ matrix.python-version }}
           conda-channels: anaconda, conda-forge
       - run: conda --version
       - run: which python

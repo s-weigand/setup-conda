@@ -731,6 +731,7 @@ const core = __importStar(__webpack_require__(470));
  * Read the values of the inputs and operating system.
  */
 exports.loadConfig = () => {
+    const activate_conda = core.getInput('activate-conda') === 'true';
     const update_conda = core.getInput('update-conda') === 'true';
     const python_version = core.getInput('python-version');
     const conda_channels = core
@@ -739,6 +740,7 @@ exports.loadConfig = () => {
         .split(',');
     const os = process.platform;
     return {
+        activate_conda,
         update_conda,
         python_version,
         conda_channels,
@@ -4784,7 +4786,9 @@ const core = __importStar(__webpack_require__(470));
  */
 exports.setup_conda = (config) => __awaiter(this, void 0, void 0, function* () {
     yield addCondaToPath(config);
-    yield activate_conda(config);
+    if (config.activate_conda) {
+        yield activate_conda(config);
+    }
     yield chown_conda_macOs(config);
     yield add_conda_channels(config);
     yield update_conda(config);
