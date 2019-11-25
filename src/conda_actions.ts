@@ -1,6 +1,5 @@
 import * as os from 'os'
 import * as path from 'path'
-import * as fs from 'fs'
 import * as temp from 'temp'
 import * as exec from '@actions/exec'
 import * as core from '@actions/core'
