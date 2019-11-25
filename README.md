@@ -1,6 +1,6 @@
 # setup-conda
 
-[![Tests](https://github.com/s-weigand/setup-conda/workflows/Test/badge.svg)](https://github.com/s-weigand/setup-conda/actions)
+[![Tests](https://github.com/s-weigand/setup-conda/workflows/Tests/badge.svg)](https://github.com/s-weigand/setup-conda/actions)
 
 This action adds the [`conda`](https://conda.io/projects/conda/en/latest/user-guide/tasks/index.html)
 command from the on the worker preinstalled miniconda version to the known shell commands.
