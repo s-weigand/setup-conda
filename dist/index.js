@@ -731,6 +731,7 @@ const core = __importStar(__webpack_require__(470));
  * Read the values of the inputs and operating system.
  */
 exports.loadConfig = () => {
+    const activate_conda = core.getInput('activate-conda') === 'true';
     const update_conda = core.getInput('update-conda') === 'true';
     const python_version = core.getInput('python-version');
     const conda_channels = core
@@ -739,6 +740,7 @@ exports.loadConfig = () => {
         .split(',');
     const os = process.platform;
     return {
+        activate_conda,
         update_conda,
         python_version,
         conda_channels,
@@ -4783,12 +4785,14 @@ const core = __importStar(__webpack_require__(470));
  * @param config Configuration of the action
  */
 exports.setup_conda = (config) => __awaiter(this, void 0, void 0, function* () {
+    const initialPythonLocation = yield get_python_location();
     yield addCondaToPath(config);
     yield activate_conda(config);
     yield chown_conda_macOs(config);
     yield add_conda_channels(config);
     yield update_conda(config);
     yield install_python(config);
+    yield reset_base_python(config, initialPythonLocation);
 });
 /**
  * Generates the path of the bin dir of conda_dir.
@@ -4822,7 +4826,7 @@ const addCondaToPath = (config) => __awaiter(this, void 0, void 0, function* () 
  * @param config Configuration of the action
  */
 const activate_conda = (config) => __awaiter(this, void 0, void 0, function* () {
-    console.log('Activation conda base');
+    console.log('Activating conda base');
     if (config.os === 'win32') {
         yield exec.exec('activate.bat', ['base']);
     }
@@ -4835,15 +4839,53 @@ const activate_conda = (config) => __awaiter(this, void 0, void 0, function* () 
         yield exec.exec('bash', [stream.path]);
     }
 });
+const get_python_location = () => __awaiter(this, void 0, void 0, function* () {
+    let pythonLocation = '';
+    const options = { listeners: {} };
+    options.listeners = {
+        stdout: (data) => {
+            console.log('stdout', data.toString());
+            pythonLocation += data.toString();
+        }
+    };
+    yield exec.exec('which', ['python'], options);
+    return pythonLocation;
+});
+/**
+ * Sets the python version back to the default version
+ *
+ * @param config Configuration of the action
+ */
+const reset_base_python = (config, initialPythonLocation) => __awaiter(this, void 0, void 0, function* () {
+    if (config.activate_conda !== true) {
+        let pythonLocation = '';
+        if (process.env.pythonLocation) {
+            console.log('Using ');
+            pythonLocation = process.env.pythonLocation;
+        }
+        else {
+            pythonLocation = path.normalize(path.join(initialPythonLocation, '..'));
+            if (config.os === 'win32') {
+                pythonLocation = pythonLocation.replace(/^\\c/, 'C:');
+            }
+        }
+        console.log('Resetting Python to default version at:');
+        console.log(pythonLocation);
+        core.addPath(pythonLocation);
+        core.addPath(get_bin_dir(pythonLocation, config));
+    }
+});
 /**
  * Adds channels to the configuration of conda.
  *
  * @param config Configuration of the action
  */
 const add_conda_channels = (config) => __awaiter(this, void 0, void 0, function* () {
-    console.log('Adding conda-channels');
     for (let channel of config.conda_channels) {
-        yield exec.exec('conda', ['config', '--add', 'channels', channel]);
+        if (channel !== '') {
+            console.log('Adding conda-channels');
+            yield exec.exec('conda', ['config', '--add', 'channels', channel]);
+        }
     }
 });
 /**
@@ -4873,8 +4915,8 @@ const chown_conda_macOs = (config) => __awaiter(this, void 0, void 0, function* 
  * @param config Configuration of the action
  */
 const update_conda = (config) => __awaiter(this, void 0, void 0, function* () {
-    console.log('Updating conda');
     if (config.update_conda) {
+        console.log('Updating conda');
         yield exec.exec('conda', ['update', '-y', 'conda']);
     }
 });
@@ -4884,9 +4926,9 @@ const update_conda = (config) => __awaiter(this, void 0, void 0, function* () {
  * @param config Configuration of the action
  */
 const install_python = (config) => __awaiter(this, void 0, void 0, function* () {
-    console.log(`Installing python ${config.python_version}`);
     const python_version = config.python_version;
     if (python_version !== 'default') {
+        console.log(`Installing python ${config.python_version}`);
         if (python_version.match(/^\d+\.\d+(\.\d+)?$/) !== null) {
             yield exec.exec('conda', [
                 'install',

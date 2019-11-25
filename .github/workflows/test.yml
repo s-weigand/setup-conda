@@ -1,4 +1,4 @@
-name: 'Test'
+name: "Tests"
 on: [push, pull_request]
 
 jobs:
@@ -30,40 +30,36 @@ jobs:
 
   test-integration-default:
     runs-on: ${{ matrix.os }}
+    needs: [jest-tests, release-up-to-date]
     strategy:
-      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
       - uses: actions/checkout@v1
       - name: Check initial python version
-        run: python --version
-      - name: Install Dependencies
-        run: npm ci
-      - name: Build index.js
-        run: npm run release
+        run: |
+          python --version
+          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
       - uses: ./
       - name: Check conda version
         run: conda --version
+      - name: Check conda version, with bash on windows
+        if: matrix.os == 'windows-latest'
+        run: conda --version
+        shell: bash
       - name: Check final python version
         run: |
           python --version
-          python -c "import sys;print(sys.executable);print(sys.version_info)"
+          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
 
   test-integration-custom:
     runs-on: ${{ matrix.os }}
+    needs: [jest-tests, release-up-to-date]
     strategy:
-      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
       - uses: actions/checkout@v1
-      - name: Check initial python version
-        run: python --version
-      - name: install Dependencies
-        run: npm ci
-      - name: Build index.js
-        run: npm run release
       - uses: ./
         with:
           update-conda: true
@@ -74,4 +70,56 @@ jobs:
       - name: Check final python version
         run: |
           python --version
-          python -c "import sys;print(sys.executable);print(sys.version_info)"
+          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
+
+  test-no-activation:
+    runs-on: ${{ matrix.os }}
+    needs: [jest-tests, release-up-to-date]
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Check initial python version
+        run: |
+          python --version
+          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
+      - uses: ./
+        with:
+          activate-conda: false
+      - name: Check conda version
+        run: conda --version
+      - name: Check final python version
+        run: |
+          python --version
+          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
+      - name: Check env
+        run: printenv
+
+  test-no-activation-setup-python:
+    runs-on: ${{ matrix.os }}
+    needs: [jest-tests, release-up-to-date]
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - name: Check initial python version
+        run: |
+          python --version
+          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
+      - uses: ./
+        with:
+          activate-conda: false
+      - name: Check conda version
+        run: conda --version
+      - name: Check final python version
+        run: |
+          python --version
+          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
+      - name: Check env
+        run: printenv
