@@ -43,6 +43,10 @@ jobs:
       - uses: ./
       - name: Check conda version
         run: conda --version
+      - name: Check conda version, with bash on windows
+        if: matrix.os == 'windows-latest'
+        run: conda --version
+        shell: bash
       - name: Check final python version
         run: |
           python --version
