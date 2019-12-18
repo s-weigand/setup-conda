@@ -1,0 +1,40 @@
+name: Release
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    name: Release GitHub Actions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Release GitHub Actions
+        uses: technote-space/release-github-actions@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMIT_EMAIL: s.weigand.pyh@gmail.com
+          BRANCH_NAME: release
+          OUTPUT_BUILD_INFO_FILENAME: build.json
+          TEST_TAG_PREFIX: test/
+          ORIGINAL_TAG_PREFIX: original/
+          CREATE_MINOR_VERSION_TAG: false
+          CLEAN_TARGETS: .[!.]*,__tests__,src,*.js,*.ts,*.json,*.lock,_config.yml,CODE_OF_CONDUCT.md,node_modules
+
+  test-integration:
+    runs-on: ${{ matrix.os }}
+    needs: release
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    steps:
+      - name: Setup conda v1
+        uses: s-weigand/setup-conda@v1
+      - name: Check conda version
+        run: conda --version
+      - name: Check Python version
+        run: |
+          python --version
+          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"

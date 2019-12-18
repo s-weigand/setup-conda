@@ -1,15 +1,15 @@
-name: "Tests"
+name: 'Tests'
 on: [push, pull_request]
 
 jobs:
   jest-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Install Dependencies
         run: npm ci
       - name: Test Build
-        run: npm run build
+        run: npm run test_build
       - name: Checking format
         run: npm run format-check
       - name: Linting code
@@ -20,7 +20,7 @@ jobs:
   release-up-to-date:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Install Dependencies
         run: npm ci
       - name: Create fresh build release  compare file
@@ -35,7 +35,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Check initial python version
         run: |
           python --version
@@ -59,7 +59,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: ./
         with:
           update-conda: true
@@ -79,7 +79,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Check initial python version
         run: |
           python --version
@@ -103,7 +103,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:

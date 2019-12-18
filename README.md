@@ -24,8 +24,8 @@ The basic usage makes the conda python version the default python (`$ conda acti
 
 ```yaml
 steps:
-  - uses: actions/checkout@master
-  - uses: s-weigand/setup-conda@master
+  - uses: actions/checkout@v2
+  - uses: s-weigand/setup-conda@v1
   - run: conda --version
   - run: which python
 ```
@@ -35,12 +35,12 @@ If don't want to change the python version which is used
 
 ```yaml
 steps:
-  - uses: actions/checkout@master
+  - uses: actions/checkout@v2
   - name: Set up Python 3.8
     uses: actions/setup-python@v1
     with:
       python-version: 3.8
-  - uses: s-weigand/setup-conda@master
+  - uses: s-weigand/setup-conda@v1
     with:
       activate-conda: false
   - run: conda --version
@@ -59,9 +59,9 @@ jobs:
         python-version: [3.6, 3.7, 3.8]
     name: Python ${{ matrix.python-version }} example
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
       - name: Setup conda
-        uses: s-weigand/setup-conda@master
+        uses: s-weigand/setup-conda@v1
         with:
           update-conda: true
           python-version: ${{ matrix.python-version }}

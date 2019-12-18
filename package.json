@@ -1,13 +1,13 @@
 {
   "name": "setup-conda",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "Github Action to install conda",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
-    "release": "ncc build src/main.ts -o dist",
+    "test_build": "tsc",
+    "watch_test_build": "tsc -w",
+    "package": "ncc build src/main.ts -o dist",
     "release-compare-file": "ncc build src/main.ts -o compare",
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
