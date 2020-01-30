@@ -3,7 +3,7 @@ description: 'Setup conda to use in later actions'
 author: 'Sebastian Weigand'
 inputs:
   activate-conda:
-    description: "Wether to activate the conda base env (Default: 'true')"
+    description: "Whether to activate the conda base env (Default: 'true')"
     required: false
     default: 'true'
   update-conda:
