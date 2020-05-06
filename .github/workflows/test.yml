@@ -1,4 +1,4 @@
-name: 'Tests'
+name: "Tests"
 on: [push, pull_request]
 
 jobs:
@@ -17,20 +17,9 @@ jobs:
       - name: Running jest tests
         run: npm test
 
-  release-up-to-date:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Dependencies
-        run: npm ci
-      - name: Create fresh build release  compare file
-        run: npm run release-compare-file
-      - name: Test if the release and compare file are different
-        run: diff -qywBd dist/index.js compare/index.js
-
   test-integration-default:
     runs-on: ${{ matrix.os }}
-    needs: [jest-tests, release-up-to-date]
+    needs: jest-tests
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
@@ -54,7 +43,7 @@ jobs:
 
   test-integration-custom:
     runs-on: ${{ matrix.os }}
-    needs: [jest-tests, release-up-to-date]
+    needs: jest-tests
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
@@ -74,7 +63,7 @@ jobs:
 
   test-no-activation:
     runs-on: ${{ matrix.os }}
-    needs: [jest-tests, release-up-to-date]
+    needs: jest-tests
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
@@ -98,7 +87,7 @@ jobs:
 
   test-no-activation-setup-python:
     runs-on: ${{ matrix.os }}
-    needs: [jest-tests, release-up-to-date]
+    needs: jest-tests
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
