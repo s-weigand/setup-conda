@@ -154,7 +154,15 @@ const chown_conda_macOs = async (config: ConfigObject): Promise<void> => {
 const update_conda = async (config: ConfigObject): Promise<void> => {
   if (config.update_conda) {
     console.log('Updating conda')
-    await exec.exec('conda', ['update', '-y', 'conda'])
+    await exec.exec('conda', [
+      'update',
+      '-y',
+      '-n',
+      'base',
+      '-c',
+      'defaults',
+      'conda'
+    ])
   }
 }
 
