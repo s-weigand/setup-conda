@@ -4917,7 +4917,15 @@ const chown_conda_macOs = (config) => __awaiter(this, void 0, void 0, function* 
 const update_conda = (config) => __awaiter(this, void 0, void 0, function* () {
     if (config.update_conda) {
         console.log('Updating conda');
-        yield exec.exec('conda', ['update', '-y', 'conda']);
+        yield exec.exec('conda', [
+            'update',
+            '-y',
+            '-n',
+            'base',
+            '-c',
+            'defaults',
+            'conda'
+        ]);
     }
 });
 /**
