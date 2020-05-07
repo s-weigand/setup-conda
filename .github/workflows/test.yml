@@ -1,4 +1,4 @@
-name: 'Tests'
+name: "Tests"
 on: [push, pull_request]
 
 jobs:
@@ -16,31 +16,32 @@ jobs:
         run: npm run lint
       - name: Running jest tests
         run: npm test
-
-  release-up-to-date:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Dependencies
-        run: npm ci
-      - name: Create fresh build release  compare file
-        run: npm run release-compare-file
-      - name: Test if the release and compare file are different
-        run: diff -qywBd dist/index.js compare/index.js
+      - name: Build dist
+        run: npm run package
+      - uses: actions/upload-artifact@v2
+        with:
+          name: dist-built
+          path: dist/index.js
 
   test-integration-default:
     runs-on: ${{ matrix.os }}
-    needs: [jest-tests, release-up-to-date]
+    needs: jest-tests
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
       - uses: actions/checkout@v2
+      - name: Download built dist
+        uses: actions/download-artifact@v2
+        with:
+          name: dist-built
+          path: dist
       - name: Check initial python version
         run: |
           python --version
           python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
-      - uses: ./
+      - name: Run setup-conda
+        uses: ./
       - name: Check conda version
         run: conda --version
       - name: Check conda version, with bash on windows
@@ -54,13 +55,19 @@ jobs:
 
   test-integration-custom:
     runs-on: ${{ matrix.os }}
-    needs: [jest-tests, release-up-to-date]
+    needs: jest-tests
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
       - uses: actions/checkout@v2
-      - uses: ./
+      - name: Download built dist
+        uses: actions/download-artifact@v2
+        with:
+          name: dist-built
+          path: dist
+      - name: Run setup-conda
+        uses: ./
         with:
           update-conda: true
           python-version: 3.6
@@ -74,17 +81,23 @@ jobs:
 
   test-no-activation:
     runs-on: ${{ matrix.os }}
-    needs: [jest-tests, release-up-to-date]
+    needs: jest-tests
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
       - uses: actions/checkout@v2
+      - name: Download built dist
+        uses: actions/download-artifact@v2
+        with:
+          name: dist-built
+          path: dist
       - name: Check initial python version
         run: |
           python --version
           python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
-      - uses: ./
+      - name: Run setup-conda
+        uses: ./
         with:
           activate-conda: false
       - name: Check conda version
@@ -98,12 +111,17 @@ jobs:
 
   test-no-activation-setup-python:
     runs-on: ${{ matrix.os }}
-    needs: [jest-tests, release-up-to-date]
+    needs: jest-tests
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
       - uses: actions/checkout@v2
+      - name: Download built dist
+        uses: actions/download-artifact@v2
+        with:
+          name: dist-built
+          path: dist
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
@@ -112,7 +130,8 @@ jobs:
         run: |
           python --version
           python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
-      - uses: ./
+      - name: Run setup-conda
+        uses: ./
         with:
           activate-conda: false
       - name: Check conda version

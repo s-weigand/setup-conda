@@ -2040,6 +2040,12 @@ function run() {
         }
     });
 }
+core.warning(`'setup-conda' will drop support to run it from master!
+You are using 'setup-conda' directly from master ('s-weigand/setup-conda@master' in your workflow).
+To guarantee that breaking changes in this action won't affect the stability of your workflow,
+use tagged versions (i.e. 's-weigand/setup-conda@v1').
+The usage of @master will be deprecated 2020-07-01, make sure to change your workflow until then.
+For more information, see: https://github.com/s-weigand/setup-conda`);
 /* tslint:disable-next-line:no-floating-promises */
 run();
 
