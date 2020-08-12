@@ -1,4 +1,4 @@
-name: "Tests"
+name: 'Tests'
 on: [push, pull_request]
 
 jobs:
@@ -39,7 +39,7 @@ jobs:
       - name: Check initial python version
         run: |
           python --version
-          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
+          python -c "import sys;print(sys.executable);print(sys.version_info)"
       - name: Run setup-conda
         uses: ./
       - name: Check conda version
@@ -51,7 +51,7 @@ jobs:
       - name: Check final python version
         run: |
           python --version
-          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
+          python -c "import sys;print(sys.executable);print(sys.version_info)"
 
   test-integration-custom:
     runs-on: ${{ matrix.os }}
@@ -77,7 +77,7 @@ jobs:
       - name: Check final python version
         run: |
           python --version
-          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
+          python -c "import sys;print(sys.executable);print(sys.version_info)"
 
   test-no-activation:
     runs-on: ${{ matrix.os }}
@@ -95,7 +95,7 @@ jobs:
       - name: Check initial python version
         run: |
           python --version
-          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
+          python -c "import sys;print(sys.executable);print(sys.version_info)"
       - name: Run setup-conda
         uses: ./
         with:
@@ -105,7 +105,7 @@ jobs:
       - name: Check final python version
         run: |
           python --version
-          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
+          python -c "import sys;print(sys.executable);print(sys.version_info)"
       - name: Check env
         run: printenv
 
@@ -129,7 +129,7 @@ jobs:
       - name: Check initial python version
         run: |
           python --version
-          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
+          python -c "import sys;print(sys.executable);print(sys.version_info)"
       - name: Run setup-conda
         uses: ./
         with:
