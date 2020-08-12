@@ -1,5 +1,6 @@
 import * as os from 'os'
 import * as path from 'path'
+import * as fs from 'fs'
 import * as temp from 'temp'
 import * as exec from '@actions/exec'
 import * as core from '@actions/core'
@@ -19,20 +20,35 @@ export const setup_conda = async (config: ConfigObject): Promise<void> => {
   await add_conda_channels(config)
   await update_conda(config)
   await install_python(config)
+  await activate_conda(config)
   await reset_base_python(config, initialPythonLocation)
 }
 
 /**
- * Generates the path of the bin dir of conda_dir.
+ * Only add path_to_add to the PATH variable if it exists
  *
- * @param conda_dir Root directory of the installed conda
+ * @param path_to_add Path to add to the PATH variable
+ */
+const sane_add_path = (path_to_add: string): void => {
+  if (fs.existsSync(path_to_add)) {
+    core.addPath(path_to_add)
+  }
+}
+
+/**
+ * Adds the bin dirs of default Python or Conda to Path
+ *
+ * @param python_dist_dir Root directory of a Python dist dir
  * @param config Configuration of the action
  */
-const get_bin_dir = (conda_dir: string, config: ConfigObject): string => {
+const add_bin_dir = (python_dist_dir: string, config: ConfigObject): void => {
   if (config.os === 'win32') {
-    return path.join(conda_dir, 'Scripts')
+    sane_add_path(path.join(python_dist_dir, 'Scripts'))
+    sane_add_path(path.join(python_dist_dir, 'Library', 'bin'))
+    sane_add_path(path.join(python_dist_dir, 'usr', 'Library', 'bin'))
+    sane_add_path(path.join(python_dist_dir, 'mingw-w64', 'Library', 'bin'))
   } else {
-    return path.join(conda_dir, 'bin')
+    sane_add_path(path.join(python_dist_dir, 'bin'))
   }
 }
 
@@ -44,9 +60,8 @@ const get_bin_dir = (conda_dir: string, config: ConfigObject): string => {
 const addCondaToPath = async (config: ConfigObject): Promise<void> => {
   console.log(`Adding conda path to path: ${process.env.CONDA}`)
   const conda_base_path = process.env.CONDA as string
-  const bin_dir = get_bin_dir(conda_base_path, config)
-  core.addPath(conda_base_path)
-  core.addPath(bin_dir)
+  sane_add_path(conda_base_path)
+  add_bin_dir(conda_base_path, config)
 }
 
 /**
@@ -105,8 +120,8 @@ const reset_base_python = async (
     }
     console.log('Resetting Python to default version at:')
     console.log(pythonLocation)
-    core.addPath(pythonLocation)
-    core.addPath(get_bin_dir(pythonLocation, config))
+    sane_add_path(pythonLocation)
+    add_bin_dir(pythonLocation, config)
   }
 }
 

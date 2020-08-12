@@ -37,4 +37,10 @@ jobs:
       - name: Check Python version
         run: |
           python --version
-          python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
+          python -c "import sys;print(sys.executable);print(sys.version_info)"
+      - name: Check env
+        run: printenv
+      - name: Install and check pandoc version
+        run: |
+          conda install pandoc
+          pandoc -v
