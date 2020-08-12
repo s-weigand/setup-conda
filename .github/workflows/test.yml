@@ -52,6 +52,10 @@ jobs:
         run: |
           python --version
           python -c "import sys;print(sys.executable);print(sys.version_info)"
+      - name: Install and check pandoc version
+        run: |
+          conda install pandoc
+          pandoc -v
 
   test-integration-custom:
     runs-on: ${{ matrix.os }}
@@ -78,6 +82,10 @@ jobs:
         run: |
           python --version
           python -c "import sys;print(sys.executable);print(sys.version_info)"
+      - name: Install and check pandoc version
+        run: |
+          conda install pandoc
+          pandoc -v
 
   test-no-activation:
     runs-on: ${{ matrix.os }}
@@ -108,6 +116,10 @@ jobs:
           python -c "import sys;print(sys.executable);print(sys.version_info)"
       - name: Check env
         run: printenv
+      - name: Install and check pandoc version
+        run: |
+          conda install pandoc
+          pandoc -v
 
   test-no-activation-setup-python:
     runs-on: ${{ matrix.os }}
@@ -142,3 +154,7 @@ jobs:
           python -c "from __future__ import print_function;import sys;print(sys.executable);print(sys.version_info)"
       - name: Check env
         run: printenv
+      - name: Install and check pandoc version
+        run: |
+          conda install pandoc
+          pandoc -v
