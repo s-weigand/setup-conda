@@ -20,6 +20,7 @@ export const setup_conda = async (config: ConfigObject): Promise<void> => {
   await add_conda_channels(config)
   await update_conda(config)
   await install_python(config)
+  await activate_conda(config)
   await reset_base_python(config, initialPythonLocation)
 }
 
