@@ -4776,6 +4776,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const os = __importStar(__webpack_require__(87));
 const path = __importStar(__webpack_require__(622));
+const fs = __importStar(__webpack_require__(747));
 const temp = __importStar(__webpack_require__(731));
 const exec = __importStar(__webpack_require__(986));
 const core = __importStar(__webpack_require__(470));
@@ -4792,20 +4793,34 @@ exports.setup_conda = (config) => __awaiter(this, void 0, void 0, function* () {
     yield add_conda_channels(config);
     yield update_conda(config);
     yield install_python(config);
+    yield activate_conda(config);
     yield reset_base_python(config, initialPythonLocation);
 });
 /**
- * Generates the path of the bin dir of conda_dir.
+ * Only add path_to_add to the PATH variable if it exists
  *
- * @param conda_dir Root directory of the installed conda
+ * @param path_to_add Path to add to the PATH variable
+ */
+const sane_add_path = (path_to_add) => {
+    if (fs.existsSync(path_to_add)) {
+        core.addPath(path_to_add);
+    }
+};
+/**
+ * Adds the bin dirs of default Python or Conda to Path
+ *
+ * @param python_dist_dir Root directory of a Python dist dir
  * @param config Configuration of the action
  */
-const get_bin_dir = (conda_dir, config) => {
+const add_bin_dir = (python_dist_dir, config) => {
     if (config.os === 'win32') {
-        return path.join(conda_dir, 'Scripts');
+        sane_add_path(path.join(python_dist_dir, 'Scripts'));
+        sane_add_path(path.join(python_dist_dir, 'Library', 'bin'));
+        sane_add_path(path.join(python_dist_dir, 'usr', 'Library', 'bin'));
+        sane_add_path(path.join(python_dist_dir, 'mingw-w64', 'Library', 'bin'));
     }
     else {
-        return path.join(conda_dir, 'bin');
+        sane_add_path(path.join(python_dist_dir, 'bin'));
     }
 };
 /**
@@ -4816,9 +4831,8 @@ const get_bin_dir = (conda_dir, config) => {
 const addCondaToPath = (config) => __awaiter(this, void 0, void 0, function* () {
     console.log(`Adding conda path to path: ${process.env.CONDA}`);
     const conda_base_path = process.env.CONDA;
-    const bin_dir = get_bin_dir(conda_base_path, config);
-    core.addPath(conda_base_path);
-    core.addPath(bin_dir);
+    sane_add_path(conda_base_path);
+    add_bin_dir(conda_base_path, config);
 });
 /**
  * Activates the conda base env.
@@ -4871,8 +4885,8 @@ const reset_base_python = (config, initialPythonLocation) => __awaiter(this, voi
         }
         console.log('Resetting Python to default version at:');
         console.log(pythonLocation);
-        core.addPath(pythonLocation);
-        core.addPath(get_bin_dir(pythonLocation, config));
+        sane_add_path(pythonLocation);
+        add_bin_dir(pythonLocation, config);
     }
 });
 /**
