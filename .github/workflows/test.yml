@@ -52,6 +52,8 @@ jobs:
         run: |
           python --version
           python -c "import sys;print(sys.executable);print(sys.version_info)"
+      - name: Check env
+        run: printenv
       - name: Install and check pandoc version
         run: |
           conda install pandoc
@@ -82,6 +84,8 @@ jobs:
         run: |
           python --version
           python -c "import sys;print(sys.executable);print(sys.version_info)"
+      - name: Check env
+        run: printenv
       - name: Install and check pandoc version
         run: |
           conda install pandoc
