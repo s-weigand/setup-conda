@@ -25,6 +25,6 @@ export const loadConfig = (): ConfigObject => {
     update_conda,
     python_version,
     conda_channels,
-    os
+    os,
   }
 }

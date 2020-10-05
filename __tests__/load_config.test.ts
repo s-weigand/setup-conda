@@ -5,7 +5,7 @@ const testEnvVars = {
   'INPUT_ACTIVATE-CONDA': 'true',
   'INPUT_UPDATE-CONDA': 'true',
   'INPUT_PYTHON-VERSION': 'default',
-  'INPUT_CONDA-CHANNELS': 'conda-forge, anaconda'
+  'INPUT_CONDA-CHANNELS': 'conda-forge, anaconda',
 }
 
 describe('Reading of the config', () => {

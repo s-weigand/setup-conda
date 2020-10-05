@@ -91,7 +91,7 @@ const get_python_location = async (): Promise<string> => {
     stdout: (data: Buffer) => {
       console.log('stdout', data.toString())
       pythonLocation += data.toString()
-    }
+    },
   }
   await exec.exec('which', ['python'], options)
   return pythonLocation
@@ -156,7 +156,7 @@ const chown_conda_macOs = async (config: ConfigObject): Promise<void> => {
       'chown',
       '-R',
       `${user_name}:staff`,
-      process.env.CONDA as string
+      process.env.CONDA as string,
     ])
   }
 }
@@ -176,7 +176,7 @@ const update_conda = async (config: ConfigObject): Promise<void> => {
       'base',
       '-c',
       'defaults',
-      'conda'
+      'conda',
     ])
   }
 }
@@ -194,14 +194,14 @@ const install_python = async (config: ConfigObject): Promise<void> => {
       await exec.exec('conda', [
         'install',
         '-y',
-        `python=${config.python_version}`
+        `python=${config.python_version}`,
       ])
     } else {
       throw new Error(
         [
           `The value of "python-version" you provided was ${python_version}, which is invalid.`,
           'The value of "python-version" needs to be of form:',
-          /^\d+\.\d+(\.\d+)?$/
+          /^\d+\.\d+(\.\d+)?$/,
         ].join(os.EOL)
       )
     }
