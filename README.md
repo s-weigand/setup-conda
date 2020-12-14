@@ -86,6 +86,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://github.com/s-weigand"><img src="https://avatars2.githubusercontent.com/u/9513634?v=4" width="100px;" alt=""/><br /><sub><b>Sebastian Weigand</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/commits?author=s-weigand" title="Code">💻</a> <a href="#ideas-s-weigand" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-s-weigand" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-s-weigand" title="Maintenance">🚧</a> <a href="https://github.com/s-weigand/setup-conda/commits?author=s-weigand" title="Tests">⚠️</a> <a href="https://github.com/s-weigand/setup-conda/pulls?q=is%3Apr+reviewed-by%3As-weigand" title="Reviewed Pull Requests">👀</a></td>
     <td align="center"><a href="https://santi.uy"><img src="https://avatars3.githubusercontent.com/u/3905501?v=4" width="100px;" alt=""/><br /><sub><b>Santiago Castro</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/commits?author=bryant1410" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/d-chambers"><img src="https://avatars2.githubusercontent.com/u/11671536?v=4" width="100px;" alt=""/><br /><sub><b>Derrick</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/commits?author=d-chambers" title="Documentation">📖</a></td>
   </tr>
 </table>
 
