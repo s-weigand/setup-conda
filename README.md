@@ -88,6 +88,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://santi.uy"><img src="https://avatars3.githubusercontent.com/u/3905501?v=4" width="100px;" alt=""/><br /><sub><b>Santiago Castro</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/commits?author=bryant1410" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/d-chambers"><img src="https://avatars2.githubusercontent.com/u/11671536?v=4" width="100px;" alt=""/><br /><sub><b>Derrick</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/commits?author=d-chambers" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/basic-ph"><img src="https://avatars2.githubusercontent.com/u/35763852?v=4" width="100px;" alt=""/><br /><sub><b>Pietro Fumiani</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Abasic-ph" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/dcdenu4"><img src="https://avatars3.githubusercontent.com/u/2659980?v=4" width="100px;" alt=""/><br /><sub><b>Doug</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Adcdenu4" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
