@@ -36,6 +36,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "dcdenu4",
+      "name": "Doug",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/2659980?v=4",
+      "profile": "https://github.com/dcdenu4",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
