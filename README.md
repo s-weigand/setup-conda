@@ -1,9 +1,7 @@
 # setup-conda
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![Tests](https://github.com/s-weigand/setup-conda/workflows/Tests/badge.svg)](https://github.com/s-weigand/setup-conda/actions)
+[![All Contributors](https://img.shields.io/github/all-contributors/s-weigand/setup-conda)](#contributors-)
 
 This action adds the [`conda`](https://conda.io/projects/conda/en/latest/user-guide/tasks/index.html)
 command from the on the worker preinstalled miniconda version to the known shell commands.
