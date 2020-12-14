@@ -36,6 +36,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "basic-ph",
+      "name": "Pietro Fumiani",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/35763852?v=4",
+      "profile": "https://github.com/basic-ph",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
