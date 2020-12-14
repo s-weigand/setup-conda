@@ -1,0 +1,29 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "s-weigand",
+      "name": "Sebastian Weigand",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/9513634?v=4",
+      "profile": "https://github.com/s-weigand",
+      "contributions": [
+        "code",
+        "ideas",
+        "infra",
+        "maintenance",
+        "test",
+        "review"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "setup-conda",
+  "projectOwner": "s-weigand",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
