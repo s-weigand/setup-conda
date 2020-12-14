@@ -14,7 +14,7 @@ use tagged versions instead (i.e. `s-weigand/setup-conda@v1`). This is to ensure
 
 | Name             | Requirement | Default     | Description                                                                                                                                                          |
 | ---------------- | ----------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `activate-conda` | _optional_  | `true`      | Wether to activate the conda base env.                                                                                                                               |
+| `activate-conda` | _optional_  | `true`      | Whether to activate the conda base env.                                                                                                                               |
 | `update-conda`   | _optional_  | `false`     | If conda should be updated before running other commands.                                                                                                            |
 | `python-version` | _optional_  | `'default'` | Python version which should be installed with conda.                                                                                                                 |
 | `conda-channels` | _optional_  | `''`        | Additional channels like 'conda-forge', as coma separated list, which can be used to install packages. The last channel in the list, will have the highest priority. |
