@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Release GitHub Actions
-        uses: technote-space/release-github-actions@v6
+        uses: technote-space/release-github-actions@v7
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMIT_EMAIL: s.weigand.pyh@gmail.com
