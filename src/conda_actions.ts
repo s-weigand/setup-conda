@@ -30,6 +30,7 @@ export const setup_conda = async (config: ConfigObject): Promise<void> => {
   await install_python(config)
   await activate_conda(config)
   await reset_base_python(config, initialPythonLocation)
+  console.log({ Env: process.env })
 }
 
 /**
@@ -79,32 +80,33 @@ const addCondaToPath = async (config: ConfigObject): Promise<void> => {
  */
 const activate_conda = async (config: ConfigObject): Promise<void> => {
   console.log('Activating conda base')
-  let envVarsAndCondaPaths: ParsedActivationScriptOutput
+  let envVarsAndCondaPaths: Promise<ParsedActivationScriptOutput>
   let activationStr = ''
 
   const options = { listeners: {} }
   options.listeners = {
     stdout: (data: Buffer) => {
-      console.log('stdout', data.toString())
-      activationStr += data.toString()
+      console.log('activationStr: ', data.toString())
+      activationStr = data.toString()
     },
   }
   if (config.os === 'win32') {
-    await exec.exec('conda', ['shell.powershell', 'activate', 'base'])
-    envVarsAndCondaPaths = await parseActivationScriptOutput(
+    await exec.exec('conda', ['shell.powershell', 'activate', 'base'], options)
+    envVarsAndCondaPaths = parseActivationScriptOutput(
       activationStr,
       '$Env:',
       ';'
     )
   } else {
-    await exec.exec('conda', ['shell.bash', 'activate', 'base'])
-    envVarsAndCondaPaths = await parseActivationScriptOutput(
+    await exec.exec('conda', ['shell.bash', 'activate', 'base'], options)
+    envVarsAndCondaPaths = parseActivationScriptOutput(
       activationStr,
       'export ',
       ':'
     )
   }
-  const { condaPaths, envVars } = envVarsAndCondaPaths
+  const { condaPaths, envVars } = await envVarsAndCondaPaths
+  console.log('Data used for activation:\n', { condaPaths, envVars })
   for (const condaPath of condaPaths) {
     sane_add_path(condaPath)
   }
@@ -147,6 +149,7 @@ export const parseActivationScriptOutput = async (
   }
   return { condaPaths, envVars }
 }
+
 const get_python_location = async (): Promise<string> => {
   let pythonLocation = ''
 
