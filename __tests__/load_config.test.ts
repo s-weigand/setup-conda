@@ -29,4 +29,10 @@ describe('Reading of the config', () => {
     expect(config.conda_channels).toEqual(['conda-forge', 'anaconda'])
     expect(config.os).toEqual(process.platform)
   })
+
+  it('no channels', () => {
+    process.env['INPUT_CONDA-CHANNELS'] = ''
+    const config = loadConfig()
+    expect(config.conda_channels).toEqual([])
+  })
 })

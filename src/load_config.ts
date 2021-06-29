@@ -19,6 +19,7 @@ export const loadConfig = (): ConfigObject => {
     .getInput('conda-channels')
     .replace(' ', '')
     .split(',')
+    .filter((channel) => channel !== '')
   const os = process.platform
   return {
     activate_conda,
