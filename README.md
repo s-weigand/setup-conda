@@ -6,10 +6,6 @@
 This action adds the [`conda`](https://conda.io/projects/conda/en/latest/user-guide/tasks/index.html)
 command from the on the worker preinstalled miniconda version to the known shell commands.
 
-:warning:
-The usage directly from master (`s-weigand/setup-conda@master`) was be deprecated on 2020-10-01,
-use tagged versions instead (i.e. `s-weigand/setup-conda@v1`). This is to ensure that breaking changes in this action, won't break users workflows.
-
 ## Inputs
 
 | Name             | Requirement | Default     | Description                                                                                                                                                          |
