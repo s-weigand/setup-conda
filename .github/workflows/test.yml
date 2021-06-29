@@ -42,21 +42,20 @@ jobs:
           path: dist
       - name: Run setup-conda
         uses: ./
-      - name: Install and check pandoc version
+      - name: Install pandoc and graphviz
         run: |
-          conda install pandoc
-          pandoc -v
+          conda install pandoc graphviz
       - name: Check env
         run: printenv
       - name: Run tests
         run: |
           python -m pip install -q pytest
-          python -m pytest integrationtests/test_common.py
+          python -m pytest integrationtests/test_common.py integrationtests/test_installed_binaries.py
       - name: Run tests with bash on windows
         if: matrix.os == 'windows-latest'
         shell: bash
         run: |
-          python -m pytest integrationtests/test_common.py
+          python -m pytest integrationtests/test_common.py integrationtests/test_installed_binaries.py
 
   test-integration-custom:
     runs-on: ${{ matrix.os }}
@@ -81,16 +80,15 @@ jobs:
           update-conda: true
           python-version: 3.6
           conda-channels: anaconda, conda-forge
-      - name: Install and check pandoc version
+      - name: Install pandoc and graphviz
         run: |
-          conda install pandoc
-          pandoc -v
+          conda install pandoc graphviz
       - name: Check env
         run: printenv
       - name: Run tests
         run: |
           python -m pip install -q pytest
-          python -m pytest integrationtests/test_common.py
+          python -m pytest integrationtests/test_common.py integrationtests/test_installed_binaries.py
 
   test-no-activation:
     runs-on: ${{ matrix.os }}
@@ -113,16 +111,15 @@ jobs:
         uses: ./
         with:
           activate-conda: false
-      - name: Install and check pandoc version
+      - name: Install pandoc and graphviz
         run: |
-          conda install pandoc
-          pandoc -v
+          conda install pandoc graphviz
       - name: Check env
         run: printenv
       - name: Run tests
         run: |
           python -m pip install -q pytest
-          python -m pytest integrationtests/test_common.py integrationtests/test_not_activated.py
+          python -m pytest integrationtests
 
   test-no-activation-setup-python:
     runs-on: ${{ matrix.os }}
@@ -149,13 +146,12 @@ jobs:
         uses: ./
         with:
           activate-conda: false
-      - name: Install and check pandoc version
+      - name: Install pandoc and graphviz
         run: |
-          conda install pandoc
-          pandoc -v
+          conda install pandoc graphviz
       - name: Check env
         run: printenv
       - name: Run tests
         run: |
           python -m pip install -q pytest
-          python -m pytest integrationtests/test_common.py integrationtests/test_not_activated.py
+          python -m pytest integrationtests
