@@ -57,7 +57,7 @@ describe('Parse evn activation output', () => {
     const result: ParsedActivationScriptOutput =
       await parseActivationScriptOutput(activationStr, '$Env:', ';')
     const { condaPaths, envVars } = result
-    expect(condaPaths.length).toBe(8)
+    expect(condaPaths.length).toBe(7)
     expect(envVars['CONDA_PREFIX']).toEqual('C:\\Miniconda')
     expect(envVars['CONDA_SHLVL']).toEqual('1')
     expect(envVars['CONDA_DEFAULT_ENV']).toEqual('base')

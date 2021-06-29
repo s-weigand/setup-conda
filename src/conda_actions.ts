@@ -1,7 +1,6 @@
 import * as os from 'os'
 import * as path from 'path'
 import * as fs from 'fs'
-import * as temp from 'temp'
 import * as exec from '@actions/exec'
 import * as core from '@actions/core'
 
@@ -30,7 +29,9 @@ export const setup_conda = async (config: ConfigObject): Promise<void> => {
   await install_python(config)
   await activate_conda(config)
   await reset_base_python(config, initialPythonLocation)
+  core.startGroup('Environment variables')
   console.log({ Env: process.env })
+  core.endGroup()
 }
 
 /**
@@ -67,10 +68,12 @@ const add_bin_dir = (python_dist_dir: string, config: ConfigObject): void => {
  * @param config Configuration of the action
  */
 const addCondaToPath = async (config: ConfigObject): Promise<void> => {
-  console.log(`Adding conda path to path: ${process.env.CONDA}`)
+  core.startGroup('Adding conda path to PATH')
+  console.log(`${process.env.CONDA}`)
   const conda_base_path = process.env.CONDA as string
   sane_add_path(conda_base_path)
   add_bin_dir(conda_base_path, config)
+  core.endGroup()
 }
 
 /**
@@ -79,17 +82,17 @@ const addCondaToPath = async (config: ConfigObject): Promise<void> => {
  * @param config Configuration of the action
  */
 const activate_conda = async (config: ConfigObject): Promise<void> => {
-  console.log('Activating conda base')
+  core.startGroup('Activating conda base')
   let envVarsAndCondaPaths: Promise<ParsedActivationScriptOutput>
   let activationStr = ''
 
   const options = { listeners: {} }
   options.listeners = {
     stdout: (data: Buffer) => {
-      console.log('activationStr: ', data.toString())
       activationStr = data.toString()
     },
   }
+  console.log('Conda activate script:')
   if (config.os === 'win32') {
     await exec.exec('conda', ['shell.powershell', 'activate', 'base'], options)
     envVarsAndCondaPaths = parseActivationScriptOutput(
@@ -106,13 +109,14 @@ const activate_conda = async (config: ConfigObject): Promise<void> => {
     )
   }
   const { condaPaths, envVars } = await envVarsAndCondaPaths
-  console.log('Data used for activation:\n', { condaPaths, envVars })
+  console.log('\n\nData used for activation:\n', { condaPaths, envVars })
   for (const condaPath of condaPaths) {
     sane_add_path(condaPath)
   }
   for (const varName in envVars) {
     core.exportVariable(varName, envVars[varName])
   }
+  core.endGroup()
 }
 
 /**
@@ -133,7 +137,7 @@ export const parseActivationScriptOutput = async (
   const lines = activationStr.split(envExport)
   for (const line of lines) {
     if (line.startsWith('PATH')) {
-      const paths = line.replace(/PATH=|'|"|\n|\s/g, '').split(osPathSep)
+      const paths = line.replace(/PATH\s?=|'|"|\n|\s/g, '').split(osPathSep)
       condaPaths = paths
         .filter((path) => path.toLowerCase().indexOf('miniconda') !== -1)
         .filter(
@@ -151,16 +155,17 @@ export const parseActivationScriptOutput = async (
 }
 
 const get_python_location = async (): Promise<string> => {
+  core.startGroup('Getting original pythonLocation')
   let pythonLocation = ''
 
   const options = { listeners: {} }
   options.listeners = {
     stdout: (data: Buffer) => {
-      console.log('stdout', data.toString())
-      pythonLocation += data.toString()
+      pythonLocation = data.toString()
     },
   }
   await exec.exec('which', ['python'], options)
+  core.endGroup()
   return pythonLocation
 }
 
@@ -174,9 +179,9 @@ const reset_base_python = async (
   initialPythonLocation: string
 ): Promise<void> => {
   if (config.activate_conda !== true) {
+    core.startGroup('Resetting Python:')
     let pythonLocation = ''
     if (process.env.pythonLocation) {
-      console.log('Using ')
       pythonLocation = process.env.pythonLocation
     } else {
       pythonLocation = path.normalize(path.join(initialPythonLocation, '..'))
@@ -185,11 +190,11 @@ const reset_base_python = async (
         pythonLocation = pythonLocation.replace(/^\\c/, 'C:')
       }
     }
-    console.log('Resetting Python to default version at:')
-    console.log(pythonLocation)
+    console.log('Using python at: ', pythonLocation)
     sane_add_path(pythonLocation)
     add_bin_dir(pythonLocation, config)
   }
+  core.endGroup()
 }
 
 /**
@@ -198,11 +203,15 @@ const reset_base_python = async (
  * @param config Configuration of the action
  */
 const add_conda_channels = async (config: ConfigObject): Promise<void> => {
-  for (let channel of config.conda_channels) {
-    if (channel !== '') {
-      console.log('Adding conda-channels')
-      await exec.exec('conda', ['config', '--add', 'channels', channel])
+  if (config.conda_channels.length !== 0) {
+    core.startGroup('Adding conda-channels:')
+    for (let channel of config.conda_channels) {
+      if (channel !== '') {
+        console.log('Adding: ', channel)
+        await exec.exec('conda', ['config', '--add', 'channels', channel])
+      }
     }
+    core.endGroup()
   }
 }
 
@@ -235,7 +244,7 @@ const chown_conda_macOs = async (config: ConfigObject): Promise<void> => {
  */
 const update_conda = async (config: ConfigObject): Promise<void> => {
   if (config.update_conda) {
-    console.log('Updating conda')
+    core.startGroup('Updateing conda:')
     await exec.exec('conda', [
       'update',
       '-y',
@@ -245,6 +254,7 @@ const update_conda = async (config: ConfigObject): Promise<void> => {
       'defaults',
       'conda',
     ])
+    core.endGroup()
   }
 }
 
@@ -256,7 +266,7 @@ const update_conda = async (config: ConfigObject): Promise<void> => {
 const install_python = async (config: ConfigObject): Promise<void> => {
   const python_version = config.python_version
   if (python_version !== 'default') {
-    console.log(`Installing python ${config.python_version}`)
+    core.startGroup(`Installing conda python ${config.python_version}`)
     if (python_version.match(/^\d+\.\d+(\.\d+)?$/) !== null) {
       await exec.exec('conda', [
         'install',
@@ -272,5 +282,6 @@ const install_python = async (config: ConfigObject): Promise<void> => {
         ].join(os.EOL)
       )
     }
+    core.endGroup()
   }
 }
