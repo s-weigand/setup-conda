@@ -3,6 +3,7 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   jest-tests:
+    name: Unit test + Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -24,49 +25,58 @@ jobs:
           path: dist/index.js
 
   test-integration-default:
+    name: Default settings
     runs-on: ${{ matrix.os }}
     needs: jest-tests
+    env:
+      CONDA_CHANNELS: 'defaults'
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
       - uses: actions/checkout@v2
+      - name: Prepare tests
+        run: |
+          python --version
+          python integrationtests/prepare_tests.py
       - name: Download built dist
         uses: actions/download-artifact@v2
         with:
           name: dist-built
           path: dist
-      - name: Check initial python version
-        run: |
-          python --version
-          python -c "import sys;print(sys.executable);print(sys.version_info)"
       - name: Run setup-conda
         uses: ./
-      - name: Check conda version
-        run: conda --version
-      - name: Check conda version, with bash on windows
-        if: matrix.os == 'windows-latest'
-        run: conda --version
-        shell: bash
-      - name: Check final python version
+      - name: Install pandoc and graphviz
         run: |
-          python --version
-          python -c "import sys;print(sys.executable);print(sys.version_info)"
+          conda install pandoc graphviz
       - name: Check env
         run: printenv
-      - name: Install and check pandoc version
+      - name: Run tests
         run: |
-          conda install pandoc
-          pandoc -v
+          python -m pip install -q pytest
+          python -m pytest -v integrationtests
+      - name: Run tests with bash on windows
+        if: matrix.os == 'windows-latest'
+        shell: bash
+        run: |
+          python -m pytest -v integrationtests
 
   test-integration-custom:
+    name: Custom Python
     runs-on: ${{ matrix.os }}
+    env:
+      ENV_PYTHON: '3.6'
+      CONDA_CHANNELS: 'defaults,anaconda,conda-forge'
     needs: jest-tests
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
       - uses: actions/checkout@v2
+      - name: Prepare tests
+        run: |
+          python --version
+          python integrationtests/prepare_tests.py
       - name: Download built dist
         uses: actions/download-artifact@v2
         with:
@@ -78,55 +88,57 @@ jobs:
           update-conda: true
           python-version: 3.6
           conda-channels: anaconda, conda-forge
-      - name: Check conda version
-        run: conda --version
-      - name: Check final python version
+      - name: Install pandoc and graphviz
         run: |
-          python --version
-          python -c "import sys;print(sys.executable);print(sys.version_info)"
+          conda install pandoc graphviz
       - name: Check env
         run: printenv
-      - name: Install and check pandoc version
+      - name: Run tests
         run: |
-          conda install pandoc
-          pandoc -v
+          python -m pip install -q pytest
+          python -m pytest -v integrationtests
 
   test-no-activation:
+    name: System Python
     runs-on: ${{ matrix.os }}
+    env:
+      NOT_ACTIVATED: true
+      CONDA_CHANNELS: 'defaults'
     needs: jest-tests
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
       - uses: actions/checkout@v2
+      - name: Prepare tests
+        run: |
+          python --version
+          python integrationtests/prepare_tests.py
       - name: Download built dist
         uses: actions/download-artifact@v2
         with:
           name: dist-built
           path: dist
-      - name: Check initial python version
-        run: |
-          python --version
-          python -c "import sys;print(sys.executable);print(sys.version_info)"
       - name: Run setup-conda
         uses: ./
         with:
           activate-conda: false
-      - name: Check conda version
-        run: conda --version
-      - name: Check final python version
+      - name: Install pandoc and graphviz
         run: |
-          python --version
-          python -c "import sys;print(sys.executable);print(sys.version_info)"
+          conda install pandoc graphviz
       - name: Check env
         run: printenv
-      - name: Install and check pandoc version
+      - name: Run tests
         run: |
-          conda install pandoc
-          pandoc -v
+          python -m pip install -q pytest
+          python -m pytest -v integrationtests
 
   test-no-activation-setup-python:
+    name: Setup Python
     runs-on: ${{ matrix.os }}
+    env:
+      NOT_ACTIVATED: true
+      CONDA_CHANNELS: 'defaults'
     needs: jest-tests
     strategy:
       matrix:
@@ -142,23 +154,20 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - name: Check initial python version
+      - name: Prepare tests
         run: |
           python --version
-          python -c "import sys;print(sys.executable);print(sys.version_info)"
+          python integrationtests/prepare_tests.py
       - name: Run setup-conda
         uses: ./
         with:
           activate-conda: false
-      - name: Check conda version
-        run: conda --version
-      - name: Check final python version
+      - name: Install pandoc and graphviz
         run: |
-          python --version
-          python -c "import sys;print(sys.executable);print(sys.version_info)"
+          conda install pandoc graphviz
       - name: Check env
         run: printenv
-      - name: Install and check pandoc version
+      - name: Run tests
         run: |
-          conda install pandoc
-          pandoc -v
+          python -m pip install -q pytest
+          python -m pytest -v integrationtests
