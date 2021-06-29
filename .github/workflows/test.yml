@@ -3,6 +3,7 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   jest-tests:
+    name: Unit test + Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
