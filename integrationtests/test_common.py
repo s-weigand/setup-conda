@@ -1,11 +1,9 @@
-import subprocess
+from .prepare_tests import run_cmd
 
 
 def test_conda_installed():
     """Conda is callable from the shell"""
-    output = subprocess.Popen(
-        "conda --version", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
-    )
-    assert output.returncode == 0
-    assert output.stdout.startswith(b"conda")
-    assert output.stderr == b""
+    returncode, stdout, stderr = run_cmd("conda --version")
+    assert returncode == 0
+    assert stdout.startswith(b"conda")
+    assert stderr == b""
