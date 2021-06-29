@@ -42,18 +42,6 @@ jobs:
           path: dist
       - name: Run setup-conda
         uses: ./
-      - name: Check conda version
-        run: conda --version
-      - name: Check conda version, with bash on windows
-        if: matrix.os == 'windows-latest'
-        run: conda --version
-        shell: bash
-      - name: Check final python version
-        run: |
-          python --version
-          python -c "import sys;print(sys.executable);print(sys.version_info)"
-      - name: Check env
-        run: printenv
       - name: Install and check pandoc version
         run: |
           conda install pandoc
@@ -63,6 +51,11 @@ jobs:
       - name: Run tests
         run: |
           python -m pip install -q pytest
+          python -m pytest integrationtests/test_common.py
+      - name: Run tests with bash on windows
+        if: matrix.os == 'windows-latest'
+        shell: bash
+        run: |
           python -m pytest integrationtests/test_common.py
 
   test-integration-custom:
@@ -88,8 +81,6 @@ jobs:
           update-conda: true
           python-version: 3.6
           conda-channels: anaconda, conda-forge
-      - name: Check conda version
-        run: conda --version
       - name: Install and check pandoc version
         run: |
           conda install pandoc
@@ -122,12 +113,6 @@ jobs:
         uses: ./
         with:
           activate-conda: false
-      - name: Check conda version
-        run: conda --version
-      - name: Check final python version
-        run: |
-          python --version
-          python -c "import sys;print(sys.executable);print(sys.version_info)"
       - name: Install and check pandoc version
         run: |
           conda install pandoc
@@ -164,12 +149,6 @@ jobs:
         uses: ./
         with:
           activate-conda: false
-      - name: Check conda version
-        run: conda --version
-      - name: Check final python version
-        run: |
-          python --version
-          python -c "import sys;print(sys.executable);print(sys.version_info)"
       - name: Install and check pandoc version
         run: |
           conda install pandoc
