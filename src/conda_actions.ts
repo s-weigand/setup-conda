@@ -29,9 +29,6 @@ export const setup_conda = async (config: ConfigObject): Promise<void> => {
   await install_python(config)
   await activate_conda(config)
   await reset_base_python(config, initialPythonLocation)
-  core.startGroup('Environment variables')
-  console.log({ Env: process.env })
-  core.endGroup()
 }
 
 /**
