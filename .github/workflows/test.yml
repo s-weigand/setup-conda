@@ -62,7 +62,7 @@ jobs:
           python -m pytest -v integrationtests
 
   test-integration-test-env:
-    name: Test Env
+    name: Env login shell
     runs-on: ${{ matrix.os }}
     needs: jest-tests
     env:
@@ -106,6 +106,47 @@ jobs:
         run: printenv
       - name: Run tests
         shell: bash -l {0}
+        run: |
+          source activate TEST
+          python -m pytest -v integrationtests
+
+  test-integration-test-env-no-login:
+    name: Env no login shell
+    runs-on: ${{ matrix.os }}
+    needs: jest-tests
+    env:
+      CONDA_CHANNELS: 'defaults'
+      ENV_PYTHON: 3.8
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare tests
+        run: |
+          python --version
+          python integrationtests/prepare_tests.py
+      - name: Download built dist
+        uses: actions/download-artifact@v2
+        with:
+          name: dist-built
+          path: dist
+      - name: Run setup-conda
+        uses: ./
+        with:
+          activate-conda: false
+      - name: Create Test env
+        shell: bash
+        run: |
+          conda create --name TEST python=3.8
+          source activate TEST
+          conda install pandoc graphviz
+          pip install -q pytest
+          which pip
+      - name: Check env
+        run: printenv
+      - name: Run tests
+        shell: bash
         run: |
           source activate TEST
           python -m pytest -v integrationtests
