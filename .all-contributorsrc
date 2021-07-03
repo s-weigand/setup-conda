@@ -54,6 +54,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "ocefpaf",
+      "name": "Filipe",
+      "avatar_url": "https://avatars.githubusercontent.com/u/950575?v=4",
+      "profile": "http://ocefpaf.github.io/python4oceanographers",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
