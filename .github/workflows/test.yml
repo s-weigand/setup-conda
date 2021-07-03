@@ -86,15 +86,7 @@ jobs:
         uses: ./
         with:
           activate-conda: false
-      - name: Which activate
-        shell: bash -l {0}
-        run: which activate
-      - name: Login shell activate script
-        shell: bash -l {0}
-        run: |
-          conda shell.bash activate base
-          conda shell.posix activate base
-      - name: Install pandoc and graphviz
+      - name: Create Test env
         shell: bash -l {0}
         run: |
           conda create --name TEST python=3.8

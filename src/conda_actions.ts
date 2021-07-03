@@ -7,14 +7,6 @@ import * as core from '@actions/core'
 import { ConfigObject } from './load_config'
 
 /**
- * Container holding the results of parseActivationScriptOutput
- */
-export interface ParsedActivationScriptOutput {
-  condaPaths: string[]
-  envVars: Record<string, string>
-}
-
-/**
  * Sets up conda to be later used.
  *
  * @param config Configuration of the action
@@ -74,13 +66,13 @@ const addCondaToPath = async (config: ConfigObject): Promise<void> => {
 }
 
 /**
- * Activates the conda base env.
+ * Activates the conda base env by changing the path and env variables.
  *
  * @param config Configuration of the action
  */
 const activate_conda = async (config: ConfigObject): Promise<void> => {
   core.startGroup('Activating conda base')
-  let envVarsAndCondaPaths: Promise<ParsedActivationScriptOutput>
+  let condaPaths: string[]
   let activationStr = ''
 
   const options = { listeners: {} }
@@ -92,26 +84,18 @@ const activate_conda = async (config: ConfigObject): Promise<void> => {
   console.log('Conda activate script:')
   if (config.os === 'win32') {
     await exec.exec('conda', ['shell.powershell', 'activate', 'base'], options)
-    envVarsAndCondaPaths = parseActivationScriptOutput(
-      activationStr,
-      '$Env:',
-      ';'
-    )
+    condaPaths = await parseActivationScriptOutput(activationStr, '$Env:', ';')
   } else {
     await exec.exec('conda', ['shell.bash', 'activate', 'base'], options)
-    envVarsAndCondaPaths = parseActivationScriptOutput(
+    condaPaths = await parseActivationScriptOutput(
       activationStr,
       'export ',
       ':'
     )
   }
-  const { condaPaths, envVars } = await envVarsAndCondaPaths
-  console.log('\n\nData used for activation:\n', { condaPaths, envVars })
+  console.log('\n\nData used for activation:\n', { condaPaths })
   for (const condaPath of condaPaths) {
     sane_add_path(condaPath)
-  }
-  for (const varName in envVars) {
-    core.exportVariable(varName, envVars[varName])
   }
   core.endGroup()
 }
@@ -128,9 +112,8 @@ export const parseActivationScriptOutput = async (
   activationStr: string,
   envExport: string,
   osPathSep: string
-): Promise<ParsedActivationScriptOutput> => {
+): Promise<string[]> => {
   let condaPaths: string[] = []
-  const envVars: Record<string, string> = {}
   const lines = activationStr.split(envExport)
   for (const line of lines) {
     if (line.startsWith('PATH')) {
@@ -141,14 +124,9 @@ export const parseActivationScriptOutput = async (
           (orig, index, self) =>
             index === self.findIndex((subSetItem) => subSetItem === orig)
         )
-    } else {
-      const [varName, varValue] = line.replace(/'|"|\n|\s/g, '').split('=')
-      if (varValue !== undefined) {
-        envVars[varName.trim()] = varValue.trim()
-      }
     }
   }
-  return { condaPaths, envVars }
+  return condaPaths
 }
 
 const get_python_location = async (): Promise<string> => {
