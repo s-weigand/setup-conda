@@ -66,6 +66,35 @@ const addCondaToPath = async (config: ConfigObject): Promise<void> => {
 }
 
 /**
+ * Parse `conda shell.<shell_name> activate <env_name>`scripts outputs
+ *
+ * @param activationStr Output of the activation script
+ * @param envExport Prefix to which is used to export an env variable
+ * @param osPathSep Character to separate path in the PATH variable
+ * @returns condaPaths
+ */
+export const parseActivationScriptOutput = async (
+  activationStr: string,
+  envExport: string,
+  osPathSep: string
+): Promise<string[]> => {
+  let condaPaths: string[] = []
+  const lines = activationStr.split(envExport)
+  for (const line of lines) {
+    if (line.startsWith('PATH')) {
+      const paths = line.replace(/PATH\s?=|'|"|\n|\s/g, '').split(osPathSep)
+      condaPaths = paths
+        .filter((path) => path.toLowerCase().indexOf('miniconda') !== -1)
+        .filter(
+          (orig, index, self) =>
+            index === self.findIndex((subSetItem) => subSetItem === orig)
+        )
+    }
+  }
+  return condaPaths
+}
+
+/**
  * Activates the conda base env by changing the path and env variables.
  *
  * @param config Configuration of the action
@@ -98,35 +127,6 @@ const activate_conda = async (config: ConfigObject): Promise<void> => {
     sane_add_path(condaPath)
   }
   core.endGroup()
-}
-
-/**
- * Parse `conda shell.<shell_name> activate <env_name>`scripts outputs
- *
- * @param activationStr Output of the activation script
- * @param envExport Prefix to which is used to export an env variable
- * @param osPathSep Character to separate path in the PATH variable
- * @returns
- */
-export const parseActivationScriptOutput = async (
-  activationStr: string,
-  envExport: string,
-  osPathSep: string
-): Promise<string[]> => {
-  let condaPaths: string[] = []
-  const lines = activationStr.split(envExport)
-  for (const line of lines) {
-    if (line.startsWith('PATH')) {
-      const paths = line.replace(/PATH\s?=|'|"|\n|\s/g, '').split(osPathSep)
-      condaPaths = paths
-        .filter((path) => path.toLowerCase().indexOf('miniconda') !== -1)
-        .filter(
-          (orig, index, self) =>
-            index === self.findIndex((subSetItem) => subSetItem === orig)
-        )
-    }
-  }
-  return condaPaths
 }
 
 const get_python_location = async (): Promise<string> => {
