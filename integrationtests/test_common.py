@@ -22,12 +22,3 @@ def test_conda_channels():
     assert returncode == 0
     assert channel_list == expected
     assert stderr == b""
-
-
-def test_conda_env_vars_set():
-    """Conda env_vars are set"""
-    assert "miniconda" in os.environ["CONDA_PREFIX"].lower()
-    assert "miniconda" in os.environ["CONDA_EXE"].lower()
-    assert "miniconda" in os.environ["CONDA_PYTHON_EXE"].lower()
-    assert os.environ["CONDA_SHLVL"] == "1"
-    assert os.environ["CONDA_DEFAULT_ENV"] != ""

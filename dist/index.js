@@ -1948,13 +1948,34 @@ const addCondaToPath = (config) => __awaiter(void 0, void 0, void 0, function* (
     core.endGroup();
 });
 /**
- * Activates the conda base env.
+ * Parse `conda shell.<shell_name> activate <env_name>`scripts outputs
+ *
+ * @param activationStr Output of the activation script
+ * @param envExport Prefix to which is used to export an env variable
+ * @param osPathSep Character to separate path in the PATH variable
+ * @returns condaPaths
+ */
+exports.parseActivationScriptOutput = (activationStr, envExport, osPathSep) => __awaiter(void 0, void 0, void 0, function* () {
+    let condaPaths = [];
+    const lines = activationStr.split(envExport);
+    for (const line of lines) {
+        if (line.startsWith('PATH')) {
+            const paths = line.replace(/PATH\s?=|'|"|\n|\s/g, '').split(osPathSep);
+            condaPaths = paths
+                .filter((path) => path.toLowerCase().indexOf('miniconda') !== -1)
+                .filter((orig, index, self) => index === self.findIndex((subSetItem) => subSetItem === orig));
+        }
+    }
+    return condaPaths;
+});
+/**
+ * Activates the conda base env by changing the path and env variables.
  *
  * @param config Configuration of the action
  */
 const activate_conda = (config) => __awaiter(void 0, void 0, void 0, function* () {
     core.startGroup('Activating conda base');
-    let envVarsAndCondaPaths;
+    let condaPaths;
     let activationStr = '';
     const options = { listeners: {} };
     options.listeners = {
@@ -1965,49 +1986,17 @@ const activate_conda = (config) => __awaiter(void 0, void 0, void 0, function* (
     console.log('Conda activate script:');
     if (config.os === 'win32') {
         yield exec.exec('conda', ['shell.powershell', 'activate', 'base'], options);
-        envVarsAndCondaPaths = exports.parseActivationScriptOutput(activationStr, '$Env:', ';');
+        condaPaths = yield exports.parseActivationScriptOutput(activationStr, '$Env:', ';');
     }
     else {
         yield exec.exec('conda', ['shell.bash', 'activate', 'base'], options);
-        envVarsAndCondaPaths = exports.parseActivationScriptOutput(activationStr, 'export ', ':');
+        condaPaths = yield exports.parseActivationScriptOutput(activationStr, 'export ', ':');
     }
-    const { condaPaths, envVars } = yield envVarsAndCondaPaths;
-    console.log('\n\nData used for activation:\n', { condaPaths, envVars });
+    console.log('\n\nData used for activation:\n', { condaPaths });
     for (const condaPath of condaPaths) {
         sane_add_path(condaPath);
     }
-    for (const varName in envVars) {
-        core.exportVariable(varName, envVars[varName]);
-    }
     core.endGroup();
-});
-/**
- * Parse `conda shell.<shell_name> activate <env_name>`scripts outputs
- *
- * @param activationStr Output of the activation script
- * @param envExport Prefix to which is used to export an env variable
- * @param osPathSep Character to separate path in the PATH variable
- * @returns
- */
-exports.parseActivationScriptOutput = (activationStr, envExport, osPathSep) => __awaiter(void 0, void 0, void 0, function* () {
-    let condaPaths = [];
-    const envVars = {};
-    const lines = activationStr.split(envExport);
-    for (const line of lines) {
-        if (line.startsWith('PATH')) {
-            const paths = line.replace(/PATH\s?=|'|"|\n|\s/g, '').split(osPathSep);
-            condaPaths = paths
-                .filter((path) => path.toLowerCase().indexOf('miniconda') !== -1)
-                .filter((orig, index, self) => index === self.findIndex((subSetItem) => subSetItem === orig));
-        }
-        else {
-            const [varName, varValue] = line.replace(/'|"|\n|\s/g, '').split('=');
-            if (varValue !== undefined) {
-                envVars[varName.trim()] = varValue.trim();
-            }
-        }
-    }
-    return { condaPaths, envVars };
 });
 const get_python_location = () => __awaiter(void 0, void 0, void 0, function* () {
     core.startGroup('Getting original pythonLocation');
