@@ -23,4 +23,6 @@ jobs:
       - name: Test conda environment
         run: |
           source activate setup-conda-env
+          python --version
+          which python
           conda env create --dry-run -f environment.yml -n test-environment
