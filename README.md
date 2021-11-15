@@ -86,6 +86,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/basic-ph"><img src="https://avatars2.githubusercontent.com/u/35763852?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Pietro Fumiani</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Abasic-ph" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/dcdenu4"><img src="https://avatars3.githubusercontent.com/u/2659980?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Doug</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Adcdenu4" title="Bug reports">🐛</a></td>
     <td align="center"><a href="http://ocefpaf.github.io/python4oceanographers"><img src="https://avatars.githubusercontent.com/u/950575?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Filipe</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Aocefpaf" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://carlsimonadorf.com"><img src="https://avatars.githubusercontent.com/u/1441208?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Carl Simon Adorf</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Acsadorf" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
