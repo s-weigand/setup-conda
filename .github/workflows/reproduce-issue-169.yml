@@ -1,0 +1,21 @@
+name: test-install
+
+on:
+  - push
+
+jobs:
+  py310-install:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Setup Conda
+        uses: s-weigand/setup-conda@v1
+        with:
+          python-version: '3.10'
+          update-conda: false
+          conda-channels: conda-forge
+
+      - run: conda --version
+      - run: python --version
+      - run: which python
