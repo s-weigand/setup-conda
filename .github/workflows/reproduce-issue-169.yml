@@ -20,6 +20,18 @@ jobs:
       - run: python --version
       - run: which python
 
+      - name: Replace python version in environment.yml
+        shell: python
+        run: |
+          from pathlib import Path
+
+          env_file = Path("environment.yml")
+          env_file_text = env_file.read_text().replace("python~=3.7", "python~=3.10")
+          env_file.write_text(env_file_text)
+
+      - name: Show environment.yml
+        run: cat environment.yml
+
       - name: Test conda environment
         run: |
           source activate setup-conda-env
