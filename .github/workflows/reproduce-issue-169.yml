@@ -12,10 +12,15 @@ jobs:
       - name: Setup Conda
         uses: s-weigand/setup-conda@v1
 
+      - name: Create py310 env
+        run: |
+          conda create -y -n setup-conda-env python=3.10
+
       - run: conda --version
       - run: python --version
       - run: which python
 
       - name: Test conda environment
         run: |
-          conda env create --dry-run -f environment.yml -n test-environment python=3.10
+          source activate setup-conda-env
+          conda env create --dry-run -f environment.yml -n test-environment
