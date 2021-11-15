@@ -1,255 +1,255 @@
-name: 'Tests'
-on: [push, pull_request, workflow_dispatch]
+# name: 'Tests'
+# on: [push, pull_request, workflow_dispatch]
 
-jobs:
-  jest-tests:
-    name: Unit test + Build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Dependencies
-        run: npm ci
-      - name: Test Build
-        run: npm run test_build
-      - name: Checking format
-        run: npm run format-check
-      - name: Linting code
-        run: npm run lint
-      - name: Running jest tests
-        run: npm test
-      - name: Build dist
-        run: npm run package
-      - uses: actions/upload-artifact@v2
-        with:
-          name: dist-built
-          path: dist/index.js
+# jobs:
+#   jest-tests:
+#     name: Unit test + Build
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Install Dependencies
+#         run: npm ci
+#       - name: Test Build
+#         run: npm run test_build
+#       - name: Checking format
+#         run: npm run format-check
+#       - name: Linting code
+#         run: npm run lint
+#       - name: Running jest tests
+#         run: npm test
+#       - name: Build dist
+#         run: npm run package
+#       - uses: actions/upload-artifact@v2
+#         with:
+#           name: dist-built
+#           path: dist/index.js
 
-  test-integration-default:
-    name: Default settings
-    runs-on: ${{ matrix.os }}
-    needs: jest-tests
-    env:
-      CONDA_CHANNELS: 'defaults'
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Prepare tests
-        run: |
-          python --version
-          python integrationtests/prepare_tests.py
-      - name: Download built dist
-        uses: actions/download-artifact@v2
-        with:
-          name: dist-built
-          path: dist
-      - name: Run setup-conda
-        uses: ./
-      - name: Install pandoc and graphviz
-        run: |
-          conda install pandoc graphviz
-      - name: Check env
-        run: printenv
-      - name: Run tests
-        run: |
-          python -m pip install -q pytest
-          python -m pytest -v integrationtests
-      - name: Run tests with bash on windows
-        if: matrix.os == 'windows-latest'
-        shell: bash
-        run: |
-          python -m pytest -v integrationtests
+#   test-integration-default:
+#     name: Default settings
+#     runs-on: ${{ matrix.os }}
+#     needs: jest-tests
+#     env:
+#       CONDA_CHANNELS: 'defaults'
+#     strategy:
+#       matrix:
+#         os: [ubuntu-latest, windows-latest, macOS-latest]
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Prepare tests
+#         run: |
+#           python --version
+#           python integrationtests/prepare_tests.py
+#       - name: Download built dist
+#         uses: actions/download-artifact@v2
+#         with:
+#           name: dist-built
+#           path: dist
+#       - name: Run setup-conda
+#         uses: ./
+#       - name: Install pandoc and graphviz
+#         run: |
+#           conda install pandoc graphviz
+#       - name: Check env
+#         run: printenv
+#       - name: Run tests
+#         run: |
+#           python -m pip install -q pytest
+#           python -m pytest -v integrationtests
+#       - name: Run tests with bash on windows
+#         if: matrix.os == 'windows-latest'
+#         shell: bash
+#         run: |
+#           python -m pytest -v integrationtests
 
-  test-integration-test-env:
-    name: Env login shell
-    runs-on: ${{ matrix.os }}
-    needs: jest-tests
-    env:
-      CONDA_CHANNELS: 'defaults'
-      ENV_PYTHON: 3.8
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Prepare tests
-        run: |
-          python --version
-          python integrationtests/prepare_tests.py
-      - name: Download built dist
-        uses: actions/download-artifact@v2
-        with:
-          name: dist-built
-          path: dist
-      - name: Run setup-conda
-        uses: ./
-        with:
-          activate-conda: false
-      - name: Create Test env
-        shell: bash -l {0}
-        run: |
-          conda create --name TEST python=3.8
-          source activate TEST
-          conda install pandoc graphviz
-          pip install -q pytest
-          which pip
-      - name: Check env
-        run: printenv
-      - name: Run tests
-        shell: bash -l {0}
-        run: |
-          source activate TEST
-          python -m pytest -v integrationtests
+#   test-integration-test-env:
+#     name: Env login shell
+#     runs-on: ${{ matrix.os }}
+#     needs: jest-tests
+#     env:
+#       CONDA_CHANNELS: 'defaults'
+#       ENV_PYTHON: 3.8
+#     strategy:
+#       matrix:
+#         os: [ubuntu-latest, windows-latest, macOS-latest]
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Prepare tests
+#         run: |
+#           python --version
+#           python integrationtests/prepare_tests.py
+#       - name: Download built dist
+#         uses: actions/download-artifact@v2
+#         with:
+#           name: dist-built
+#           path: dist
+#       - name: Run setup-conda
+#         uses: ./
+#         with:
+#           activate-conda: false
+#       - name: Create Test env
+#         shell: bash -l {0}
+#         run: |
+#           conda create --name TEST python=3.8
+#           source activate TEST
+#           conda install pandoc graphviz
+#           pip install -q pytest
+#           which pip
+#       - name: Check env
+#         run: printenv
+#       - name: Run tests
+#         shell: bash -l {0}
+#         run: |
+#           source activate TEST
+#           python -m pytest -v integrationtests
 
-  test-integration-test-env-no-login:
-    name: Env no login shell
-    runs-on: ${{ matrix.os }}
-    needs: jest-tests
-    env:
-      CONDA_CHANNELS: 'defaults'
-      ENV_PYTHON: 3.8
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Prepare tests
-        run: |
-          python --version
-          python integrationtests/prepare_tests.py
-      - name: Download built dist
-        uses: actions/download-artifact@v2
-        with:
-          name: dist-built
-          path: dist
-      - name: Run setup-conda
-        uses: ./
-        with:
-          activate-conda: false
-      - name: Create Test env
-        shell: bash
-        run: |
-          conda create --name TEST python=3.8
-          source activate TEST
-          conda install pandoc graphviz
-          pip install -q pytest
-          which pip
-      - name: Check env
-        run: printenv
-      - name: Run tests
-        shell: bash
-        run: |
-          source activate TEST
-          python -m pytest -v integrationtests
+#   test-integration-test-env-no-login:
+#     name: Env no login shell
+#     runs-on: ${{ matrix.os }}
+#     needs: jest-tests
+#     env:
+#       CONDA_CHANNELS: 'defaults'
+#       ENV_PYTHON: 3.8
+#     strategy:
+#       matrix:
+#         os: [ubuntu-latest, windows-latest, macOS-latest]
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Prepare tests
+#         run: |
+#           python --version
+#           python integrationtests/prepare_tests.py
+#       - name: Download built dist
+#         uses: actions/download-artifact@v2
+#         with:
+#           name: dist-built
+#           path: dist
+#       - name: Run setup-conda
+#         uses: ./
+#         with:
+#           activate-conda: false
+#       - name: Create Test env
+#         shell: bash
+#         run: |
+#           conda create --name TEST python=3.8
+#           source activate TEST
+#           conda install pandoc graphviz
+#           pip install -q pytest
+#           which pip
+#       - name: Check env
+#         run: printenv
+#       - name: Run tests
+#         shell: bash
+#         run: |
+#           source activate TEST
+#           python -m pytest -v integrationtests
 
-  test-integration-custom:
-    name: Custom Python
-    runs-on: ${{ matrix.os }}
-    env:
-      ENV_PYTHON: '3.6'
-      CONDA_CHANNELS: 'defaults,anaconda,conda-forge'
-    needs: jest-tests
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Prepare tests
-        run: |
-          python --version
-          python integrationtests/prepare_tests.py
-      - name: Download built dist
-        uses: actions/download-artifact@v2
-        with:
-          name: dist-built
-          path: dist
-      - name: Run setup-conda
-        uses: ./
-        with:
-          update-conda: true
-          python-version: 3.6
-          conda-channels: anaconda, conda-forge
-      - name: Install pandoc and graphviz
-        run: |
-          conda install pandoc graphviz
-      - name: Check env
-        run: printenv
-      - name: Run tests
-        run: |
-          python -m pip install -q pytest
-          python -m pytest -v integrationtests
+#   test-integration-custom:
+#     name: Custom Python
+#     runs-on: ${{ matrix.os }}
+#     env:
+#       ENV_PYTHON: '3.6'
+#       CONDA_CHANNELS: 'defaults,anaconda,conda-forge'
+#     needs: jest-tests
+#     strategy:
+#       matrix:
+#         os: [ubuntu-latest, windows-latest, macOS-latest]
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Prepare tests
+#         run: |
+#           python --version
+#           python integrationtests/prepare_tests.py
+#       - name: Download built dist
+#         uses: actions/download-artifact@v2
+#         with:
+#           name: dist-built
+#           path: dist
+#       - name: Run setup-conda
+#         uses: ./
+#         with:
+#           update-conda: true
+#           python-version: 3.6
+#           conda-channels: anaconda, conda-forge
+#       - name: Install pandoc and graphviz
+#         run: |
+#           conda install pandoc graphviz
+#       - name: Check env
+#         run: printenv
+#       - name: Run tests
+#         run: |
+#           python -m pip install -q pytest
+#           python -m pytest -v integrationtests
 
-  test-no-activation:
-    name: System Python
-    runs-on: ${{ matrix.os }}
-    env:
-      NOT_ACTIVATED: true
-      CONDA_CHANNELS: 'defaults'
-    needs: jest-tests
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Prepare tests
-        run: |
-          python --version
-          python integrationtests/prepare_tests.py
-      - name: Download built dist
-        uses: actions/download-artifact@v2
-        with:
-          name: dist-built
-          path: dist
-      - name: Run setup-conda
-        uses: ./
-        with:
-          activate-conda: false
-      - name: Install pandoc and graphviz
-        run: |
-          conda install pandoc graphviz
-      - name: Check env
-        run: printenv
-      - name: Run tests
-        run: |
-          python -m pip install -q pytest
-          python -m pytest -v integrationtests
+#   test-no-activation:
+#     name: System Python
+#     runs-on: ${{ matrix.os }}
+#     env:
+#       NOT_ACTIVATED: true
+#       CONDA_CHANNELS: 'defaults'
+#     needs: jest-tests
+#     strategy:
+#       matrix:
+#         os: [ubuntu-latest, windows-latest, macOS-latest]
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Prepare tests
+#         run: |
+#           python --version
+#           python integrationtests/prepare_tests.py
+#       - name: Download built dist
+#         uses: actions/download-artifact@v2
+#         with:
+#           name: dist-built
+#           path: dist
+#       - name: Run setup-conda
+#         uses: ./
+#         with:
+#           activate-conda: false
+#       - name: Install pandoc and graphviz
+#         run: |
+#           conda install pandoc graphviz
+#       - name: Check env
+#         run: printenv
+#       - name: Run tests
+#         run: |
+#           python -m pip install -q pytest
+#           python -m pytest -v integrationtests
 
-  test-no-activation-setup-python:
-    name: Setup Python
-    runs-on: ${{ matrix.os }}
-    env:
-      NOT_ACTIVATED: true
-      CONDA_CHANNELS: 'defaults'
-    needs: jest-tests
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Download built dist
-        uses: actions/download-artifact@v2
-        with:
-          name: dist-built
-          path: dist
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-      - name: Prepare tests
-        run: |
-          python --version
-          python integrationtests/prepare_tests.py
-      - name: Run setup-conda
-        uses: ./
-        with:
-          activate-conda: false
-      - name: Install pandoc and graphviz
-        run: |
-          conda install pandoc graphviz
-      - name: Check env
-        run: printenv
-      - name: Run tests
-        run: |
-          python -m pip install -q pytest
-          python -m pytest -v integrationtests
+#   test-no-activation-setup-python:
+#     name: Setup Python
+#     runs-on: ${{ matrix.os }}
+#     env:
+#       NOT_ACTIVATED: true
+#       CONDA_CHANNELS: 'defaults'
+#     needs: jest-tests
+#     strategy:
+#       matrix:
+#         os: [ubuntu-latest, windows-latest, macOS-latest]
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Download built dist
+#         uses: actions/download-artifact@v2
+#         with:
+#           name: dist-built
+#           path: dist
+#       - name: Set up Python 3.8
+#         uses: actions/setup-python@v2
+#         with:
+#           python-version: 3.8
+#       - name: Prepare tests
+#         run: |
+#           python --version
+#           python integrationtests/prepare_tests.py
+#       - name: Run setup-conda
+#         uses: ./
+#         with:
+#           activate-conda: false
+#       - name: Install pandoc and graphviz
+#         run: |
+#           conda install pandoc graphviz
+#       - name: Check env
+#         run: printenv
+#       - name: Run tests
+#         run: |
+#           python -m pip install -q pytest
+#           python -m pytest -v integrationtests
