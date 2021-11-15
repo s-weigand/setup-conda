@@ -6,7 +6,6 @@ on:
 jobs:
   py310-install:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
 
     steps:
       - name: Setup Conda
