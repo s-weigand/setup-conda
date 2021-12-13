@@ -37,7 +37,7 @@
     "temp": "^0.9.4"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.2",
+    "@types/jest": "^27.0.3",
     "@types/node": "^16.11.7",
     "@types/temp": "^0.9.1",
     "@zeit/ncc": "^0.22.3",
