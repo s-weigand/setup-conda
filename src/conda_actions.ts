@@ -133,7 +133,7 @@ const activate_conda = async (config: ConfigObject): Promise<void> => {
     )
   }
   console.log('\n\nData used for activation:\n', { condaPaths })
-  for (const condaPath of condaPaths) {
+  for (const condaPath of condaPaths.sort((a, b) => -a.indexOf('envs'))) {
     sane_add_path(condaPath)
   }
   core.endGroup()
