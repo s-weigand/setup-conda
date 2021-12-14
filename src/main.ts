@@ -6,7 +6,7 @@ async function run(): Promise<void> {
   try {
     const config = loadConfig()
     await setup_conda(config)
-  } catch (error) {
+  } catch (error: any) {
     core.setFailed(error.message)
   }
 }
