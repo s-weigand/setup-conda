@@ -15,6 +15,16 @@ describe('Parse env activation output', () => {
       ':'
     )
     expect(condaPaths.length).toBe(3)
+    expect(envVars['CONDA_PREFIX']).toBe(
+      '/usr/share/miniconda/envs/__setup_conda'
+    )
+    expect(envVars).not.toHaveProperty('CONDA_SHLVL')
+    expect(envVars['CONDA_DEFAULT_ENV']).toBe('__setup_conda')
+    expect(envVars['CONDA_PROMPT_MODIFIER']).toBe('(__setup_conda) ')
+    expect(envVars['CONDA_EXE']).toBe('/usr/share/miniconda/bin/conda')
+    expect(envVars['_CE_M']).toBe('')
+    expect(envVars['_CE_CONDA']).toBe('')
+    expect(envVars['CONDA_PYTHON_EXE']).toBe('/usr/share/miniconda/bin/python')
   })
   it('Parse macOs activation', async () => {
     const activationStr = fs
@@ -28,6 +38,16 @@ describe('Parse env activation output', () => {
       ':'
     )
     expect(condaPaths.length).toBe(3)
+    expect(envVars['CONDA_PREFIX']).toBe(
+      '/usr/local/miniconda/envs/__setup_conda'
+    )
+    expect(envVars).not.toHaveProperty('CONDA_SHLVL')
+    expect(envVars['CONDA_DEFAULT_ENV']).toBe('__setup_conda')
+    expect(envVars['CONDA_PROMPT_MODIFIER']).toBe('(__setup_conda) ')
+    expect(envVars['CONDA_EXE']).toBe('/usr/local/miniconda/bin/conda')
+    expect(envVars['_CE_M']).toBe('')
+    expect(envVars['_CE_CONDA']).toBe('')
+    expect(envVars['CONDA_PYTHON_EXE']).toBe('/usr/local/miniconda/bin/python')
   })
   it('Parse windows activation', async () => {
     const activationStr = fs
@@ -42,7 +62,7 @@ describe('Parse env activation output', () => {
     )
     expect(condaPaths.length).toBe(9)
     expect(envVars['CONDA_PREFIX']).toBe('C:\\Miniconda\\envs\\__setup_conda')
-    expect(envVars['CONDA_SHLVL']).not.toBe('1')
+    expect(envVars).not.toHaveProperty('CONDA_SHLVL')
     expect(envVars['CONDA_DEFAULT_ENV']).toBe('__setup_conda')
     expect(envVars['CONDA_PROMPT_MODIFIER']).toBe('(__setup_conda) ')
     expect(envVars['CONDA_EXE']).toBe('C:\\Miniconda\\Scripts\\conda.exe')
