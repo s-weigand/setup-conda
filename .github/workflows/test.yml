@@ -96,6 +96,7 @@ jobs:
           pip install -q pytest
           which pip
           which pandoc
+          printenv
       - name: Check env
         run: printenv
       - name: Run tests
@@ -138,6 +139,7 @@ jobs:
           pip install -q pytest
           which pip
           which pandoc
+          printenv
       - name: Check env
         run: printenv
       - name: Run tests
