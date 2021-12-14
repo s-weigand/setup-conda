@@ -49,6 +49,7 @@ jobs:
       - name: Install pandoc and graphviz
         run: |
           conda install pandoc graphviz
+          which pandoc
       - name: Check env
         run: printenv
       - name: Run tests
@@ -94,6 +95,7 @@ jobs:
           conda install pandoc graphviz
           pip install -q pytest
           which pip
+          which pandoc
       - name: Check env
         run: printenv
       - name: Run tests
@@ -135,6 +137,7 @@ jobs:
           conda install pandoc graphviz
           pip install -q pytest
           which pip
+          which pandoc
       - name: Check env
         run: printenv
       - name: Run tests
@@ -173,6 +176,7 @@ jobs:
       - name: Install pandoc and graphviz
         run: |
           conda install pandoc graphviz
+          which pandoc
       - name: Check env
         run: printenv
       - name: Run tests
@@ -208,6 +212,7 @@ jobs:
       - name: Install pandoc and graphviz
         run: |
           conda install pandoc graphviz
+          which pandoc
       - name: Check env
         run: printenv
       - name: Run tests
@@ -247,6 +252,7 @@ jobs:
       - name: Install pandoc and graphviz
         run: |
           conda install pandoc graphviz
+          which pandoc
       - name: Check env
         run: printenv
       - name: Run tests
