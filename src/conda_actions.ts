@@ -98,7 +98,7 @@ export const parseActivationScriptOutput = async (
     } else {
       let [varName, varValue] = line.replace(/\s?=\s?/g, '=').split('=')
 
-      if (varValue !== undefined) {
+      if (varValue !== undefined && varName !== 'CONDA_SHLVL') {
         varValue = varValue.replace(/('|")?\r?\n$/gm, '').replace(/^'|"/gm, '')
         envVars[`${varName}`] = varValue
       }

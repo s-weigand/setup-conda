@@ -42,7 +42,7 @@ describe('Parse env activation output', () => {
     )
     expect(condaPaths.length).toBe(9)
     expect(envVars['CONDA_PREFIX']).toBe('C:\\Miniconda\\envs\\__setup_conda')
-    expect(envVars['CONDA_SHLVL']).toBe('1')
+    expect(envVars['CONDA_SHLVL']).not.toBe('1')
     expect(envVars['CONDA_DEFAULT_ENV']).toBe('__setup_conda')
     expect(envVars['CONDA_PROMPT_MODIFIER']).toBe('(__setup_conda) ')
     expect(envVars['CONDA_EXE']).toBe('C:\\Miniconda\\Scripts\\conda.exe')
