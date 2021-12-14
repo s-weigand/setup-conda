@@ -113,9 +113,9 @@ export const parseActivationScriptOutput = async (
  * @param config Configuration of the action
  */
 const activate_conda = async (config: ConfigObject): Promise<void> => {
-  const conda_env_name =
+  const condaEnvName =
     config.python_version === 'default' ? 'base' : '__setup_conda'
-  core.startGroup(`Activating conda ${conda_env_name}`)
+  core.startGroup(`Activating conda ${condaEnvName}`)
   let parsedActivationScript: ParsedActivationScript
   let activationStr = ''
 
@@ -129,7 +129,7 @@ const activate_conda = async (config: ConfigObject): Promise<void> => {
   if (config.os === 'win32') {
     await exec.exec(
       'conda',
-      ['shell.powershell', 'activate', conda_env_name],
+      ['shell.powershell', 'activate', condaEnvName],
       options
     )
     parsedActivationScript = await parseActivationScriptOutput(
@@ -138,11 +138,7 @@ const activate_conda = async (config: ConfigObject): Promise<void> => {
       ';'
     )
   } else {
-    await exec.exec(
-      'conda',
-      ['shell.bash', 'activate', conda_env_name],
-      options
-    )
+    await exec.exec('conda', ['shell.bash', 'activate', condaEnvName], options)
     parsedActivationScript = await parseActivationScriptOutput(
       activationStr,
       'export ',
