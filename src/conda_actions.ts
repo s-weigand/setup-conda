@@ -149,8 +149,8 @@ const activate_conda = async (config: ConfigObject): Promise<void> => {
       ':'
     )
   }
-  const condaPaths = parsedActivationScript.condaPaths.sort(
-    (a, b) => -a.indexOf('envs')
+  const condaPaths = parsedActivationScript.condaPaths.sort((a, b) =>
+    a.indexOf('envs')
   )
   console.log('\n\nData used for activation:\n', {
     condaPaths,
