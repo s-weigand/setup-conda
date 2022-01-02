@@ -88,6 +88,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://ocefpaf.github.io/python4oceanographers"><img src="https://avatars.githubusercontent.com/u/950575?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Filipe</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Aocefpaf" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://carlsimonadorf.com"><img src="https://avatars.githubusercontent.com/u/1441208?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Carl Simon Adorf</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Acsadorf" title="Bug reports">🐛</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/wvxvw"><img src="https://avatars.githubusercontent.com/u/3147276?v=4?s=100" width="100px;" alt=""/><br /><sub><b>wvxvw</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Awvxvw" title="Bug reports">🐛</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
