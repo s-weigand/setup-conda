@@ -42,7 +42,7 @@
     "@types/temp": "^0.9.1",
     "@zeit/ncc": "^0.22.3",
     "jest": "^27.4.5",
-    "jest-circus": "^27.4.5",
+    "jest-circus": "^27.4.6",
     "prettier": "^2.5.1",
     "ts-jest": "^27.1.2",
     "tslint": "^6.1.3",
