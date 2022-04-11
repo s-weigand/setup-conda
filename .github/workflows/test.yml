@@ -19,7 +19,7 @@ jobs:
         run: npm test
       - name: Build dist
         run: npm run package
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: dist-built
           path: dist/index.js
