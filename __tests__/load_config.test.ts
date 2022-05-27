@@ -5,7 +5,7 @@ const testEnvVars = {
   'INPUT_ACTIVATE-CONDA': 'true',
   'INPUT_UPDATE-CONDA': 'true',
   'INPUT_PYTHON-VERSION': 'default',
-  'INPUT_CONDA-CHANNELS': 'conda-forge, anaconda',
+  'INPUT_CONDA-CHANNELS': '  conda-forge, anaconda   , bioconda',
 }
 
 describe('Reading of the config', () => {
@@ -26,7 +26,11 @@ describe('Reading of the config', () => {
     expect(config.activate_conda).toEqual(true)
     expect(config.update_conda).toEqual(true)
     expect(config.python_version).toEqual('default')
-    expect(config.conda_channels).toEqual(['conda-forge', 'anaconda'])
+    expect(config.conda_channels).toEqual([
+      'conda-forge',
+      'anaconda',
+      'bioconda',
+    ])
     expect(config.os).toEqual(process.platform)
   })
 

@@ -17,7 +17,7 @@ export const loadConfig = (): ConfigObject => {
   const python_version = core.getInput('python-version')
   const conda_channels = core
     .getInput('conda-channels')
-    .replace(' ', '')
+    .replace(/ /g, '')
     .split(',')
     .filter((channel) => channel !== '')
   const os = process.platform
