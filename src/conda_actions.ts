@@ -268,7 +268,22 @@ const update_conda = async (config: ConfigObject): Promise<void> => {
 }
 
 /**
- * Installs a the python version specified in inputs.
+ * Create conda environment for Python or PyPy.
+ *
+ * @param requested_pyver Requested Python/PyPy version
+ */
+const create_conda_env = async (requested_pyver: string): Promise<void> => {
+  await exec.exec('conda', [
+    'create',
+    '-y',
+    '-n',
+    '__setup_conda',
+    requested_pyver,
+  ])
+}
+
+/**
+ * Installs the python version specified in inputs.
  *
  * @param config Configuration of the action
  */
@@ -277,19 +292,22 @@ const install_python = async (config: ConfigObject): Promise<void> => {
   if (python_version !== 'default') {
     core.startGroup(`Installing conda python ${config.python_version}`)
     if (python_version.match(/^\d+\.\d+(\.\d+)?$/) !== null) {
-      await exec.exec('conda', [
-        'create',
-        '-y',
-        '-n',
-        '__setup_conda',
-        `python=${config.python_version}`,
-      ])
+      await create_conda_env(`python=${config.python_version}`)
+    } else if (
+      python_version.match(
+        /^pypy(([23]\.\d+)?(=(\d+)?(\.\d+)?(\.\d+)?)?)?$/
+      ) !== null
+    ) {
+      await create_conda_env(config.python_version)
     } else {
       throw new Error(
         [
           `The value of "python-version" you provided was ${python_version}, which is invalid.`,
           'The value of "python-version" needs to be of form:',
           /^\d+\.\d+(\.\d+)?$/,
+          '(for Python) or',
+          /^pypy(([23]\.\d+)?(=(\d+)?(\.\d+)?(\.\d+)?)?)?$/,
+          '(for PyPy and PyPy3)',
         ].join(os.EOL)
       )
     }
