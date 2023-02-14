@@ -312,13 +312,15 @@ jobs:
     name: Test PyPy
     runs-on: ${{ matrix.os }}
     needs: jest-tests
+    env:
+      PYPY_TEST: true
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
-        pypy-ver: ["pypy3.7"]
+        pypy-ver: ['pypy3.7']
         include:
-        - os: ubuntu-latest
-          pypy-ver: "pypy2.7"
+          - os: ubuntu-latest
+            pypy-ver: 'pypy2.7'
     steps:
       - uses: actions/checkout@v3
       - name: Download built dist
@@ -326,6 +328,10 @@ jobs:
         with:
           name: dist-built
           path: dist
+      - name: Prepare tests
+        run: |
+          python --version
+          python integrationtests/prepare_tests.py
       - name: Run setup-conda
         uses: ./
         with:
@@ -334,3 +340,10 @@ jobs:
       - name: Run tests
         run: |
           pypy --version
+      - name: Check env
+        run: printenv
+      - name: Run tests
+        run: |
+          pypy -m ensurepip
+          pypy -m pip install -q pytest
+          pypy -m pytest -v integrationtests/test_python_version.py
