@@ -90,6 +90,16 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "phdru",
+      "name": "Oleg Broytman",
+      "avatar_url": "https://avatars.githubusercontent.com/u/730158?v=4",
+      "profile": "http://phdru.name/",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
@@ -97,5 +107,7 @@
   "projectOwner": "s-weigand",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": true
+  "skipCi": true,
+  "commitType": "docs",
+  "commitConvention": "angular"
 }
