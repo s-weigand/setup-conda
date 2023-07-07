@@ -10,19 +10,28 @@ on:
   workflow_dispatch:
 
 jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.0
+
   jest-tests:
     name: Unit test + Build
     runs-on: ubuntu-latest
+    needs: pre-commit
     steps:
       - uses: actions/checkout@v3
       - name: Install Dependencies
         run: npm ci
       - name: Test Build
         run: npm run test_build
-      - name: Checking format
-        run: npm run format-check
-      - name: Linting code
-        run: npm run lint
       - name: Running jest tests
         run: npm test
       - name: Build dist
@@ -195,10 +204,10 @@ jobs:
           python -m pytest -v integrationtests
 
   test-integration-new:
-    name: Newer Python (3.10)
+    name: Newer Python (3.11)
     runs-on: ${{ matrix.os }}
     env:
-      ENV_PYTHON: '3.10'
+      ENV_PYTHON: '3.11'
       CONDA_CHANNELS: 'defaults,anaconda,conda-forge'
     needs: jest-tests
     strategy:
@@ -219,7 +228,7 @@ jobs:
         uses: ./
         with:
           update-conda: true
-          python-version: '3.10'
+          python-version: '3.11'
           conda-channels: anaconda, conda-forge
       - name: Install pandoc and graphviz
         run: |
