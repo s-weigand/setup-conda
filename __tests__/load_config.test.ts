@@ -1,5 +1,4 @@
 import { loadConfig } from '../src/load_config'
-import * as core from '@actions/core'
 
 const testEnvVars = {
   'INPUT_ACTIVATE-CONDA': 'true',
