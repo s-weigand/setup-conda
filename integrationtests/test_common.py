@@ -1,6 +1,6 @@
 import os
 
-from .prepare_tests import run_cmd
+from integrationtests.prepare_tests import run_cmd
 
 
 def test_conda_installed():

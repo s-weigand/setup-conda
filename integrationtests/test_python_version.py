@@ -3,7 +3,7 @@ import sys
 
 import pytest
 
-from .prepare_tests import read_initial_settings
+from integrationtests.prepare_tests import read_initial_settings
 
 
 @pytest.mark.skipif("NOT_ACTIVATED" not in os.environ, reason="Conda python is used")
@@ -26,3 +26,9 @@ def test_python_from_conda():
 def test_custom_python_from_conda():
     """Same python if from conda"""
     assert sys.version.startswith(os.environ["ENV_PYTHON"])
+
+
+@pytest.mark.skipif("PYPY_TEST" not in os.environ, reason="Not a pypy test")
+def test_pypy_from_conda():
+    """Installed python version is PyPy"""
+    assert sys.version.splitlines()[1].startswith("[PyPy")

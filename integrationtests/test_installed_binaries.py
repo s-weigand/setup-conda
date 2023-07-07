@@ -1,6 +1,6 @@
 import sys
 
-from .prepare_tests import run_cmd
+from integrationtests.prepare_tests import run_cmd
 
 
 def test_pandoc_installed():
@@ -9,6 +9,7 @@ def test_pandoc_installed():
     assert returncode == 0
     assert stdout.startswith(b"pandoc")
     assert stderr == b""
+
 
 def test_garphviz_installed():
     """Graphviz is installed"""
@@ -19,4 +20,3 @@ def test_garphviz_installed():
     assert returncode == 0
     assert stdout == b""
     assert stderr.startswith(b"dot - graphviz version")
-

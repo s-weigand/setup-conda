@@ -25,7 +25,7 @@ The basic usage makes the conda python version the default python (`$ conda acti
 
 ```yaml
 steps:
-  - uses: actions/checkout@v2
+  - uses: actions/checkout@v3
   - uses: s-weigand/setup-conda@v1
   - run: conda --version
   - run: which python
@@ -36,9 +36,9 @@ If you don't want to change the python version which is used
 
 ```yaml
 steps:
-  - uses: actions/checkout@v2
+  - uses: actions/checkout@v3
   - name: Set up Python 3.8
-    uses: actions/setup-python@v2
+    uses: actions/setup-python@v4
     with:
       python-version: 3.8
   - uses: s-weigand/setup-conda@v1
@@ -60,7 +60,7 @@ jobs:
         python-version: [3.6, 3.7, 3.8]
     name: Python ${{ matrix.python-version }} example
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup conda
         uses: s-weigand/setup-conda@v1
         with:
@@ -79,19 +79,22 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 <table>
-  <tr>
-    <td align="center"><a href="https://github.com/s-weigand"><img src="https://avatars2.githubusercontent.com/u/9513634?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Sebastian Weigand</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/commits?author=s-weigand" title="Code">💻</a> <a href="#ideas-s-weigand" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-s-weigand" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-s-weigand" title="Maintenance">🚧</a> <a href="https://github.com/s-weigand/setup-conda/commits?author=s-weigand" title="Tests">⚠️</a> <a href="https://github.com/s-weigand/setup-conda/pulls?q=is%3Apr+reviewed-by%3As-weigand" title="Reviewed Pull Requests">👀</a></td>
-    <td align="center"><a href="https://santi.uy"><img src="https://avatars3.githubusercontent.com/u/3905501?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Santiago Castro</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/commits?author=bryant1410" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/d-chambers"><img src="https://avatars2.githubusercontent.com/u/11671536?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Derrick</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/commits?author=d-chambers" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/basic-ph"><img src="https://avatars2.githubusercontent.com/u/35763852?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Pietro Fumiani</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Abasic-ph" title="Bug reports">🐛</a></td>
-    <td align="center"><a href="https://github.com/dcdenu4"><img src="https://avatars3.githubusercontent.com/u/2659980?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Doug</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Adcdenu4" title="Bug reports">🐛</a></td>
-    <td align="center"><a href="http://ocefpaf.github.io/python4oceanographers"><img src="https://avatars.githubusercontent.com/u/950575?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Filipe</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Aocefpaf" title="Bug reports">🐛</a></td>
-    <td align="center"><a href="https://carlsimonadorf.com"><img src="https://avatars.githubusercontent.com/u/1441208?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Carl Simon Adorf</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Acsadorf" title="Bug reports">🐛</a></td>
-  </tr>
-  <tr>
-    <td align="center"><a href="https://github.com/wvxvw"><img src="https://avatars.githubusercontent.com/u/3147276?v=4?s=100" width="100px;" alt=""/><br /><sub><b>wvxvw</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Awvxvw" title="Bug reports">🐛</a></td>
-    <td align="center"><a href="https://violafanfani.github.io/"><img src="https://avatars.githubusercontent.com/u/35488779?v=4?s=100" width="100px;" alt=""/><br /><sub><b>violafanfani</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Aviolafanfani" title="Bug reports">🐛</a></td>
-  </tr>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/s-weigand"><img src="https://avatars2.githubusercontent.com/u/9513634?v=4?s=100" width="100px;" alt="Sebastian Weigand"/><br /><sub><b>Sebastian Weigand</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/commits?author=s-weigand" title="Code">💻</a> <a href="#ideas-s-weigand" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-s-weigand" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-s-weigand" title="Maintenance">🚧</a> <a href="https://github.com/s-weigand/setup-conda/commits?author=s-weigand" title="Tests">⚠️</a> <a href="https://github.com/s-weigand/setup-conda/pulls?q=is%3Apr+reviewed-by%3As-weigand" title="Reviewed Pull Requests">👀</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://santi.uy"><img src="https://avatars3.githubusercontent.com/u/3905501?v=4?s=100" width="100px;" alt="Santiago Castro"/><br /><sub><b>Santiago Castro</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/commits?author=bryant1410" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/d-chambers"><img src="https://avatars2.githubusercontent.com/u/11671536?v=4?s=100" width="100px;" alt="Derrick"/><br /><sub><b>Derrick</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/commits?author=d-chambers" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/basic-ph"><img src="https://avatars2.githubusercontent.com/u/35763852?v=4?s=100" width="100px;" alt="Pietro Fumiani"/><br /><sub><b>Pietro Fumiani</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Abasic-ph" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/dcdenu4"><img src="https://avatars3.githubusercontent.com/u/2659980?v=4?s=100" width="100px;" alt="Doug"/><br /><sub><b>Doug</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Adcdenu4" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://ocefpaf.github.io/python4oceanographers"><img src="https://avatars.githubusercontent.com/u/950575?v=4?s=100" width="100px;" alt="Filipe"/><br /><sub><b>Filipe</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Aocefpaf" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://carlsimonadorf.com"><img src="https://avatars.githubusercontent.com/u/1441208?v=4?s=100" width="100px;" alt="Carl Simon Adorf"/><br /><sub><b>Carl Simon Adorf</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Acsadorf" title="Bug reports">🐛</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/wvxvw"><img src="https://avatars.githubusercontent.com/u/3147276?v=4?s=100" width="100px;" alt="wvxvw"/><br /><sub><b>wvxvw</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Awvxvw" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://violafanfani.github.io/"><img src="https://avatars.githubusercontent.com/u/35488779?v=4?s=100" width="100px;" alt="violafanfani"/><br /><sub><b>violafanfani</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Aviolafanfani" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://phdru.name/"><img src="https://avatars.githubusercontent.com/u/730158?v=4?s=100" width="100px;" alt="Oleg Broytman"/><br /><sub><b>Oleg Broytman</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Aphdru" title="Bug reports">🐛</a> <a href="https://github.com/s-weigand/setup-conda/commits?author=phdru" title="Code">💻</a></td>
+    </tr>
+  </tbody>
 </table>
 
 <!-- markdownlint-restore -->
