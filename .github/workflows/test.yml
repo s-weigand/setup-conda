@@ -204,10 +204,10 @@ jobs:
           python -m pytest -v integrationtests
 
   test-integration-new:
-    name: Newer Python (3.10)
+    name: Newer Python (3.11)
     runs-on: ${{ matrix.os }}
     env:
-      ENV_PYTHON: '3.10'
+      ENV_PYTHON: '3.11'
       CONDA_CHANNELS: 'defaults,anaconda,conda-forge'
     needs: jest-tests
     strategy:
@@ -228,7 +228,7 @@ jobs:
         uses: ./
         with:
           update-conda: true
-          python-version: '3.10'
+          python-version: '3.11'
           conda-channels: anaconda, conda-forge
       - name: Install pandoc and graphviz
         run: |
