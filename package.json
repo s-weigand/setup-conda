@@ -25,7 +25,8 @@
   ],
   "prettier": {
     "semi": false,
-    "singleQuote": true
+    "singleQuote": true,
+    "trailingComma": "all"
   },
   "author": "Sebastian Weigand",
   "license": "Apache-2.0",

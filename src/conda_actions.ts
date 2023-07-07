@@ -81,7 +81,7 @@ interface ParsedActivationScript {
 export const parseActivationScriptOutput = async (
   activationStr: string,
   envExport: string,
-  osPathSep: string
+  osPathSep: string,
 ): Promise<ParsedActivationScript> => {
   let condaPaths: string[] = []
   const envVars: { [name: string]: string } = {}
@@ -93,7 +93,7 @@ export const parseActivationScriptOutput = async (
         .filter((path) => path.toLowerCase().indexOf('miniconda') !== -1)
         .filter(
           (orig, index, self) =>
-            index === self.findIndex((subSetItem) => subSetItem === orig)
+            index === self.findIndex((subSetItem) => subSetItem === orig),
         )
     } else {
       // eslint-disable-next-line prefer-const
@@ -132,18 +132,18 @@ const activate_conda = async (config: ConfigObject): Promise<void> => {
     parsedActivationScript = await parseActivationScriptOutput(
       activationStr,
       '$Env:',
-      ';'
+      ';',
     )
   } else {
     await exec('conda', ['shell.bash', 'activate', condaEnvName], options)
     parsedActivationScript = await parseActivationScriptOutput(
       activationStr,
       'export ',
-      ':'
+      ':',
     )
   }
   const condaPaths = parsedActivationScript.condaPaths.sort((a, _) =>
-    a.indexOf('envs')
+    a.indexOf('envs'),
   )
   console.log('\n\nData used for activation:\n', {
     condaPaths,
@@ -153,7 +153,7 @@ const activate_conda = async (config: ConfigObject): Promise<void> => {
     sane_add_path(condaPath)
   }
   for (const [varName, varValue] of Object.entries(
-    parsedActivationScript.envVars
+    parsedActivationScript.envVars,
   )) {
     exportVariable(varName, varValue)
   }
@@ -182,7 +182,7 @@ const get_python_location = async (): Promise<string> => {
  */
 const reset_base_python = async (
   config: ConfigObject,
-  initialPythonLocation: string
+  initialPythonLocation: string,
 ): Promise<void> => {
   if (config.activate_conda !== true) {
     startGroup('Resetting Python:')
@@ -286,7 +286,7 @@ const install_python = async (config: ConfigObject): Promise<void> => {
       await create_conda_env(`python=${config.python_version}`)
     } else if (
       python_version.match(
-        /^pypy(([23]\.\d+)?(=(\d+)?(\.\d+)?(\.\d+)?)?)?$/
+        /^pypy(([23]\.\d+)?(=(\d+)?(\.\d+)?(\.\d+)?)?)?$/,
       ) !== null
     ) {
       await create_conda_env(config.python_version)
@@ -299,7 +299,7 @@ const install_python = async (config: ConfigObject): Promise<void> => {
           '(for Python) or',
           /^pypy(([23]\.\d+)?(=(\d+)?(\.\d+)?(\.\d+)?)?)?$/,
           '(for PyPy and PyPy3)',
-        ].join(EOL)
+        ].join(EOL),
       )
     }
     endGroup()

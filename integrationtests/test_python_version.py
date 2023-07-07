@@ -3,7 +3,7 @@ import sys
 
 import pytest
 
-from .prepare_tests import read_initial_settings
+from integrationtests.prepare_tests import read_initial_settings
 
 
 @pytest.mark.skipif("NOT_ACTIVATED" not in os.environ, reason="Conda python is used")
