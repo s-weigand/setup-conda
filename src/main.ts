@@ -1,4 +1,4 @@
-import * as core from '@actions/core'
+import core from '@actions/core'
 import { loadConfig } from './load_config'
 import { setup_conda } from './conda_actions'
 

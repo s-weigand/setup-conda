@@ -1,8 +1,8 @@
-import * as os from 'os'
-import * as path from 'path'
-import * as fs from 'fs'
-import * as exec from '@actions/exec'
-import * as core from '@actions/core'
+import { EOL } from 'os'
+import { join, normalize } from 'path'
+import { existsSync } from 'fs'
+import { exec } from '@actions/exec'
+import { startGroup, endGroup, addPath, exportVariable } from '@actions/core'
 
 import { ConfigObject } from './load_config'
 
@@ -29,8 +29,8 @@ export const setup_conda = async (config: ConfigObject): Promise<void> => {
  * @param path_to_add Path to add to the PATH variable
  */
 const sane_add_path = (path_to_add: string): void => {
-  if (fs.existsSync(path_to_add)) {
-    core.addPath(path_to_add)
+  if (existsSync(path_to_add)) {
+    addPath(path_to_add)
   }
 }
 
@@ -42,12 +42,12 @@ const sane_add_path = (path_to_add: string): void => {
  */
 const add_bin_dir = (python_dist_dir: string, config: ConfigObject): void => {
   if (config.os === 'win32') {
-    sane_add_path(path.join(python_dist_dir, 'Scripts'))
-    sane_add_path(path.join(python_dist_dir, 'Library', 'bin'))
-    sane_add_path(path.join(python_dist_dir, 'usr', 'Library', 'bin'))
-    sane_add_path(path.join(python_dist_dir, 'mingw-w64', 'Library', 'bin'))
+    sane_add_path(join(python_dist_dir, 'Scripts'))
+    sane_add_path(join(python_dist_dir, 'Library', 'bin'))
+    sane_add_path(join(python_dist_dir, 'usr', 'Library', 'bin'))
+    sane_add_path(join(python_dist_dir, 'mingw-w64', 'Library', 'bin'))
   } else {
-    sane_add_path(path.join(python_dist_dir, 'bin'))
+    sane_add_path(join(python_dist_dir, 'bin'))
   }
 }
 
@@ -57,12 +57,12 @@ const add_bin_dir = (python_dist_dir: string, config: ConfigObject): void => {
  * @param config Configuration of the action
  */
 const addCondaToPath = async (config: ConfigObject): Promise<void> => {
-  core.startGroup('Adding conda path to PATH')
+  startGroup('Adding conda path to PATH')
   console.log(`${process.env.CONDA}`)
   const conda_base_path = process.env.CONDA as string
   sane_add_path(conda_base_path)
   add_bin_dir(conda_base_path, config)
-  core.endGroup()
+  endGroup()
 }
 
 interface ParsedActivationScript {
@@ -81,7 +81,7 @@ interface ParsedActivationScript {
 export const parseActivationScriptOutput = async (
   activationStr: string,
   envExport: string,
-  osPathSep: string,
+  osPathSep: string
 ): Promise<ParsedActivationScript> => {
   let condaPaths: string[] = []
   const envVars: { [name: string]: string } = {}
@@ -93,7 +93,7 @@ export const parseActivationScriptOutput = async (
         .filter((path) => path.toLowerCase().indexOf('miniconda') !== -1)
         .filter(
           (orig, index, self) =>
-            index === self.findIndex((subSetItem) => subSetItem === orig),
+            index === self.findIndex((subSetItem) => subSetItem === orig)
         )
     } else {
       // eslint-disable-next-line prefer-const
@@ -116,7 +116,7 @@ export const parseActivationScriptOutput = async (
 const activate_conda = async (config: ConfigObject): Promise<void> => {
   const condaEnvName =
     config.python_version === 'default' ? 'base' : '__setup_conda'
-  core.startGroup(`Activating conda ${condaEnvName}`)
+  startGroup(`Activating conda ${condaEnvName}`)
   let parsedActivationScript: ParsedActivationScript
   let activationStr = ''
 
@@ -128,26 +128,22 @@ const activate_conda = async (config: ConfigObject): Promise<void> => {
   }
   console.log('Conda activate script:')
   if (config.os === 'win32') {
-    await exec.exec(
-      'conda',
-      ['shell.powershell', 'activate', condaEnvName],
-      options,
-    )
+    await exec('conda', ['shell.powershell', 'activate', condaEnvName], options)
     parsedActivationScript = await parseActivationScriptOutput(
       activationStr,
       '$Env:',
-      ';',
+      ';'
     )
   } else {
-    await exec.exec('conda', ['shell.bash', 'activate', condaEnvName], options)
+    await exec('conda', ['shell.bash', 'activate', condaEnvName], options)
     parsedActivationScript = await parseActivationScriptOutput(
       activationStr,
       'export ',
-      ':',
+      ':'
     )
   }
   const condaPaths = parsedActivationScript.condaPaths.sort((a, _) =>
-    a.indexOf('envs'),
+    a.indexOf('envs')
   )
   console.log('\n\nData used for activation:\n', {
     condaPaths,
@@ -157,15 +153,15 @@ const activate_conda = async (config: ConfigObject): Promise<void> => {
     sane_add_path(condaPath)
   }
   for (const [varName, varValue] of Object.entries(
-    parsedActivationScript.envVars,
+    parsedActivationScript.envVars
   )) {
-    core.exportVariable(varName, varValue)
+    exportVariable(varName, varValue)
   }
-  core.endGroup()
+  endGroup()
 }
 
 const get_python_location = async (): Promise<string> => {
-  core.startGroup('Getting original pythonLocation')
+  startGroup('Getting original pythonLocation')
   let pythonLocation = ''
 
   const options = { listeners: {} }
@@ -174,8 +170,8 @@ const get_python_location = async (): Promise<string> => {
       pythonLocation = data.toString()
     },
   }
-  await exec.exec('which', ['python'], options)
-  core.endGroup()
+  await exec('which', ['python'], options)
+  endGroup()
   return pythonLocation
 }
 
@@ -186,15 +182,15 @@ const get_python_location = async (): Promise<string> => {
  */
 const reset_base_python = async (
   config: ConfigObject,
-  initialPythonLocation: string,
+  initialPythonLocation: string
 ): Promise<void> => {
   if (config.activate_conda !== true) {
-    core.startGroup('Resetting Python:')
+    startGroup('Resetting Python:')
     let pythonLocation = ''
     if (process.env.pythonLocation) {
       pythonLocation = process.env.pythonLocation
     } else {
-      pythonLocation = path.normalize(path.join(initialPythonLocation, '..'))
+      pythonLocation = normalize(join(initialPythonLocation, '..'))
 
       if (config.os === 'win32') {
         pythonLocation = pythonLocation.replace(/^\\c/, 'C:')
@@ -204,7 +200,7 @@ const reset_base_python = async (
     sane_add_path(pythonLocation)
     add_bin_dir(pythonLocation, config)
   }
-  core.endGroup()
+  endGroup()
 }
 
 /**
@@ -214,14 +210,14 @@ const reset_base_python = async (
  */
 const add_conda_channels = async (config: ConfigObject): Promise<void> => {
   if (config.conda_channels.length !== 0) {
-    core.startGroup('Adding conda-channels:')
+    startGroup('Adding conda-channels:')
     for (const channel of config.conda_channels) {
       if (channel !== '') {
         console.log('Adding: ', channel)
-        await exec.exec('conda', ['config', '--add', 'channels', channel])
+        await exec('conda', ['config', '--add', 'channels', channel])
       }
     }
-    core.endGroup()
+    endGroup()
   }
 }
 
@@ -235,10 +231,10 @@ const add_conda_channels = async (config: ConfigObject): Promise<void> => {
 const chown_conda_macOs = async (config: ConfigObject): Promise<void> => {
   if (config.os === 'darwin') {
     console.log('Changing owner of conda folders')
-    const config_path = path.join(process.env.HOME as string, '.conda')
+    const config_path = join(process.env.HOME as string, '.conda')
     const user_name = process.env.USER
-    await exec.exec('sudo', ['chown', '-R', `${user_name}:staff`, config_path])
-    await exec.exec('sudo', [
+    await exec('sudo', ['chown', '-R', `${user_name}:staff`, config_path])
+    await exec('sudo', [
       'chown',
       '-R',
       `${user_name}:staff`,
@@ -254,8 +250,8 @@ const chown_conda_macOs = async (config: ConfigObject): Promise<void> => {
  */
 const update_conda = async (config: ConfigObject): Promise<void> => {
   if (config.update_conda) {
-    core.startGroup('Updateing conda:')
-    await exec.exec('conda', [
+    startGroup('Updateing conda:')
+    await exec('conda', [
       'update',
       '-y',
       '-n',
@@ -264,7 +260,7 @@ const update_conda = async (config: ConfigObject): Promise<void> => {
       'defaults',
       'conda',
     ])
-    core.endGroup()
+    endGroup()
   }
 }
 
@@ -274,13 +270,7 @@ const update_conda = async (config: ConfigObject): Promise<void> => {
  * @param requested_pyver Requested Python/PyPy version
  */
 const create_conda_env = async (requested_pyver: string): Promise<void> => {
-  await exec.exec('conda', [
-    'create',
-    '-y',
-    '-n',
-    '__setup_conda',
-    requested_pyver,
-  ])
+  await exec('conda', ['create', '-y', '-n', '__setup_conda', requested_pyver])
 }
 
 /**
@@ -289,14 +279,14 @@ const create_conda_env = async (requested_pyver: string): Promise<void> => {
  * @param config Configuration of the action
  */
 const install_python = async (config: ConfigObject): Promise<void> => {
-  const python_version = config.python_version
+  const { python_version } = config
   if (python_version !== 'default') {
-    core.startGroup(`Installing conda python ${config.python_version}`)
+    startGroup(`Installing conda python ${config.python_version}`)
     if (python_version.match(/^\d+\.\d+(\.\d+)?$/) !== null) {
       await create_conda_env(`python=${config.python_version}`)
     } else if (
       python_version.match(
-        /^pypy(([23]\.\d+)?(=(\d+)?(\.\d+)?(\.\d+)?)?)?$/,
+        /^pypy(([23]\.\d+)?(=(\d+)?(\.\d+)?(\.\d+)?)?)?$/
       ) !== null
     ) {
       await create_conda_env(config.python_version)
@@ -309,9 +299,9 @@ const install_python = async (config: ConfigObject): Promise<void> => {
           '(for Python) or',
           /^pypy(([23]\.\d+)?(=(\d+)?(\.\d+)?(\.\d+)?)?)?$/,
           '(for PyPy and PyPy3)',
-        ].join(os.EOL),
+        ].join(EOL)
       )
     }
-    core.endGroup()
+    endGroup()
   }
 }

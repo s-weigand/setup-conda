@@ -11,7 +11,7 @@
     "release-compare-file": "ncc build src/main.ts -o compare",
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
-    "lint": "eslint src/*",
+    "lint": "eslint **/*.ts",
     "test": "jest"
   },
   "repository": {

@@ -1,14 +1,12 @@
-import * as fs from 'fs'
-import * as path from 'path'
+import { readFileSync } from 'fs'
+import { resolve } from 'path'
 import { parseActivationScriptOutput } from '../src/conda_actions'
 
 describe('Parse env activation output', () => {
   it('Parse linux activation', async () => {
-    const activationStr = fs
-      .readFileSync(
-        path.resolve(__dirname, 'data/linux_conda_bash_activation.sh'),
-      )
-      .toString('utf8')
+    const activationStr = readFileSync(
+      resolve(__dirname, 'data/linux_conda_bash_activation.sh'),
+    ).toString('utf8')
     const { condaPaths, envVars } = await parseActivationScriptOutput(
       activationStr,
       'export ',
@@ -27,11 +25,9 @@ describe('Parse env activation output', () => {
     expect(envVars['CONDA_PYTHON_EXE']).toBe('/usr/share/miniconda/bin/python')
   })
   it('Parse macOs activation', async () => {
-    const activationStr = fs
-      .readFileSync(
-        path.resolve(__dirname, 'data/mac_conda_bash_activation.sh'),
-      )
-      .toString('utf8')
+    const activationStr = readFileSync(
+      resolve(__dirname, 'data/mac_conda_bash_activation.sh'),
+    ).toString('utf8')
     const { condaPaths, envVars } = await parseActivationScriptOutput(
       activationStr,
       'export ',
@@ -50,11 +46,9 @@ describe('Parse env activation output', () => {
     expect(envVars['CONDA_PYTHON_EXE']).toBe('/usr/local/miniconda/bin/python')
   })
   it('Parse windows activation', async () => {
-    const activationStr = fs
-      .readFileSync(
-        path.resolve(__dirname, 'data/windows_conda_powershell_activation.ps1'),
-      )
-      .toString('utf8')
+    const activationStr = readFileSync(
+      resolve(__dirname, 'data/windows_conda_powershell_activation.ps1'),
+    ).toString('utf8')
     const { condaPaths, envVars } = await parseActivationScriptOutput(
       activationStr,
       '$Env:',
