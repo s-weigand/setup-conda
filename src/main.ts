@@ -6,10 +6,13 @@ async function run(): Promise<void> {
   try {
     const config = loadConfig()
     await setup_conda(config)
-  } catch (error: any) {
-    core.setFailed(error.message)
+  } catch (error) {
+    if (typeof error === 'string') {
+      core.setFailed(error)
+    } else if (error instanceof Error) {
+      core.setFailed(error.message)
+    }
   }
 }
 
-/* tslint:disable-next-line:no-floating-promises */
 run()

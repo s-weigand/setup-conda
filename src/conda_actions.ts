@@ -84,7 +84,7 @@ export const parseActivationScriptOutput = async (
   osPathSep: string
 ): Promise<ParsedActivationScript> => {
   let condaPaths: string[] = []
-  let envVars: { [name: string]: string } = {}
+  const envVars: { [name: string]: string } = {}
   const lines = activationStr.split(envExport)
   for (const line of lines) {
     if (line.startsWith('PATH')) {
@@ -96,6 +96,7 @@ export const parseActivationScriptOutput = async (
             index === self.findIndex((subSetItem) => subSetItem === orig)
         )
     } else {
+      // eslint-disable-next-line prefer-const
       let [varName, varValue] = line.replace(/\s?=\s?/g, '=').split('=')
 
       if (varValue !== undefined && varName !== 'CONDA_SHLVL') {
@@ -145,7 +146,7 @@ const activate_conda = async (config: ConfigObject): Promise<void> => {
       ':'
     )
   }
-  const condaPaths = parsedActivationScript.condaPaths.sort((a, b) =>
+  const condaPaths = parsedActivationScript.condaPaths.sort((a, _) =>
     a.indexOf('envs')
   )
   console.log('\n\nData used for activation:\n', {
@@ -214,7 +215,7 @@ const reset_base_python = async (
 const add_conda_channels = async (config: ConfigObject): Promise<void> => {
   if (config.conda_channels.length !== 0) {
     core.startGroup('Adding conda-channels:')
-    for (let channel of config.conda_channels) {
+    for (const channel of config.conda_channels) {
       if (channel !== '') {
         console.log('Adding: ', channel)
         await exec.exec('conda', ['config', '--add', 'channels', channel])
