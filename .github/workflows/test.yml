@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: pre-commit
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Dependencies
         run: npm ci
       - name: Test Build
@@ -51,7 +51,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Prepare tests
         run: |
           python --version
@@ -90,7 +90,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Prepare tests
         run: |
           python --version
@@ -133,7 +133,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Prepare tests
         run: |
           python --version
@@ -176,7 +176,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Prepare tests
         run: |
           python --version
@@ -214,7 +214,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Prepare tests
         run: |
           python --version
@@ -252,7 +252,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Prepare tests
         run: |
           python --version
@@ -288,7 +288,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Download built dist
         uses: actions/download-artifact@v3
         with:
@@ -331,7 +331,7 @@ jobs:
           - os: ubuntu-latest
             pypy-ver: 'pypy2.7'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Download built dist
         uses: actions/download-artifact@v3
         with:
