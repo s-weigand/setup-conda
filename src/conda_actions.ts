@@ -56,10 +56,29 @@ const add_bin_dir = (python_dist_dir: string, config: ConfigObject): void => {
  *
  * @param config Configuration of the action
  */
-const addCondaToPath = async (config: ConfigObject): Promise<void> => {
+export const addCondaToPath = async (config: ConfigObject): Promise<void> => {
   startGroup('Adding conda path to PATH')
-  console.log(`${process.env.CONDA}`)
-  const conda_base_path = process.env.CONDA as string
+  console.log('The CONDA env var is:', process.env.CONDA)
+  const conda_base_path = process.env.CONDA
+  let errorMessageAppendix: string[] = []
+  if (conda_base_path === undefined) {
+    if (config.os === 'darwin' && process.env.ImageOS !== undefined) {
+      const macImageVersion = Number(process.env.ImageOS.replace('macos', ''))
+      if (macImageVersion > 12) {
+        errorMessageAppendix = [
+          'MacOS images newer than "macos-12" (i.e. "macOS-latest") are known to be ' +
+            'incompatible with this action due to a missing miniconda installation.',
+          'See: https://github.com/s-weigand/setup-conda/issues/432',
+        ]
+      }
+    }
+    throw new Error(
+      [
+        'Could not determine conda base path, it seams conda is not installed.',
+        ...errorMessageAppendix,
+      ].join(EOL),
+    )
+  }
   sane_add_path(conda_base_path)
   add_bin_dir(conda_base_path, config)
   endGroup()
@@ -250,7 +269,7 @@ const chown_conda_macOs = async (config: ConfigObject): Promise<void> => {
  */
 const update_conda = async (config: ConfigObject): Promise<void> => {
   if (config.update_conda) {
-    startGroup('Updateing conda:')
+    startGroup('Updating conda:')
     await exec('conda', [
       'update',
       '-y',

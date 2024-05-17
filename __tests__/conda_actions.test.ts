@@ -1,6 +1,10 @@
+import { EOL } from 'os'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
-import { parseActivationScriptOutput } from '../src/conda_actions'
+import {
+  parseActivationScriptOutput,
+  addCondaToPath,
+} from '../src/conda_actions'
 
 describe('Parse env activation output', () => {
   it('Parse linux activation', async () => {
@@ -63,5 +67,48 @@ describe('Parse env activation output', () => {
     expect(envVars['_CE_M']).toBe('')
     expect(envVars['_CE_CONDA']).toBe('')
     expect(envVars['CONDA_PYTHON_EXE']).toBe('C:\\Miniconda\\python.exe')
+  })
+})
+
+const testConfig = {
+  activate_conda: false,
+  update_conda: false,
+  python_version: '',
+  conda_channels: [],
+  os: 'linux',
+}
+
+describe("Throw error if CONDA env var isn't set", () => {
+  const OLD_ENV = process.env
+
+  beforeEach(() => {
+    process.env = {}
+  })
+
+  afterAll(() => {
+    process.env = OLD_ENV
+  })
+
+  it.each(['linux', 'win32', 'darwin'])(
+    `General error %p`,
+    async (os: string) => {
+      await expect(addCondaToPath({ ...testConfig, os })).rejects.toThrow(
+        'Could not determine conda base path, it seams conda is not installed.',
+      )
+    },
+  )
+
+  it('MacOs > 12 error', async () => {
+    process.env.ImageOS = 'macos13'
+    await expect(
+      addCondaToPath({ ...testConfig, os: 'darwin' }),
+    ).rejects.toThrow(
+      [
+        'Could not determine conda base path, it seams conda is not installed.',
+        'MacOS images newer than "macos-12" (i.e. "macOS-latest") are known to be ' +
+          'incompatible with this action due to a missing miniconda installation.',
+        'See: https://github.com/s-weigand/setup-conda/issues/432',
+      ].join(EOL),
+    )
   })
 })
