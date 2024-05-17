@@ -28,7 +28,7 @@ jobs:
     needs: release
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest, windows-latest, macOS-12]
     steps:
       - name: Setup conda v1
         uses: s-weigand/setup-conda@v1
