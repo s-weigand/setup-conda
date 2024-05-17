@@ -56,13 +56,13 @@ const add_bin_dir = (python_dist_dir: string, config: ConfigObject): void => {
  *
  * @param config Configuration of the action
  */
-const addCondaToPath = async (config: ConfigObject): Promise<void> => {
+export const addCondaToPath = async (config: ConfigObject): Promise<void> => {
   startGroup('Adding conda path to PATH')
-  console.log(`${process.env.CONDA}`)
+  console.log('The CONDA env var is:', process.env.CONDA)
   const conda_base_path = process.env.CONDA
   let errorMessageAppendix: string[] = []
   if (conda_base_path === undefined) {
-    if (config.os == 'darwin' && process.env.ImageOS !== undefined) {
+    if (config.os === 'darwin' && process.env.ImageOS !== undefined) {
       const macImageVersion = Number(process.env.ImageOS.replace('macos', ''))
       if (macImageVersion > 12) {
         errorMessageAppendix = [
