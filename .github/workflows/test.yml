@@ -354,5 +354,5 @@ jobs:
       - name: Run tests
         run: |
           pypy -m ensurepip
-          pypy -m pip install -q pytest
+          pypy -m pip install --trusted-host pypi.python.org -q pytest
           pypy -m pytest -v integrationtests/test_python_version.py
