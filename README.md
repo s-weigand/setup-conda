@@ -74,7 +74,13 @@ jobs:
       - run: which python
 ```
 
-## Contributors ✨
+# Similar projects
+
+- [conda-incubator/setup-miniconda](https://github.com/conda-incubator/setup-miniconda)
+- [mamba-org/setup-micromamba](https://github.com/mamba-org/setup-micromamba)
+- [prefix-dev/setup-pixi](https://github.com/prefix-dev/setup-pixi)
+
+# Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
