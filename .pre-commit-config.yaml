@@ -5,7 +5,7 @@ repos:
   #    FORMATTER    #
   ###################
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.6.0
     hooks:
       - id: check-ast
       - id: check-builtin-literals
@@ -15,58 +15,63 @@ repos:
       - id: fix-encoding-pragma
         args: [--remove]
 
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.8.0
-    hooks:
-      - id: pyupgrade
-        args: [--py38-plus]
-
   - repo: https://github.com/MarcoGorelli/absolufy-imports
     rev: v0.3.1
     hooks:
       - id: absolufy-imports
 
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
-    hooks:
-      - id: isort
-
-  - repo: https://github.com/python/black
-    rev: 23.3.0
-    hooks:
-      - id: black
-
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.0.0 # Use the sha or tag you want to point at
+    rev: v3.1.0
     hooks:
       - id: prettier
+
+  - repo: https://github.com/PyCQA/docformatter
+    rev: v1.7.5
+    hooks:
+      - id: docformatter
+        additional_dependencies: [tomli]
+        args: [--in-place, --config, ./pyproject.toml]
 
   ###################
   #     LINTER      #
   ###################
-
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.0.277
+    rev: v0.4.4
     hooks:
       - id: ruff
+        name: 'ruff sort imports'
+        args:
+          - '--fix'
+          - '--select=I'
+        alias: isort
+      - id: ruff-format
+      # Commands above are both formatters an not linters
+      # See also: https://github.com/astral-sh/ruff/discussions/7310#discussioncomment-7102010
+      - id: ruff
+        name: 'ruff lint'
 
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: 'v8.44.0' # Use the sha / tag you want to point at
+    rev: 'v9.2.0' # Use the sha / tag you want to point at
     hooks:
       - id: eslint
         files: \.ts$
         types: [file]
         additional_dependencies:
-          - eslint@8.44.0
-          - '@typescript-eslint/eslint-plugin@6.1.0'
-          - '@typescript-eslint/parser@6.1.0'
-          - 'eslint-config-prettier@8.8.0'
-          - 'eslint-plugin-prettier@4.2.1'
+          - eslint@9.2.0
+          - '@typescript-eslint/eslint-plugin@7.9.0'
+          - '@typescript-eslint/parser@7.9.0'
+          - 'eslint-config-prettier@9.1.0'
+          - 'eslint-plugin-prettier@5.1.3'
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.5
+    rev: v2.2.6
     hooks:
       - id: codespell
         types: [file]
         types_or: [python, markdown]
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: 'v1.7.0'
+    hooks:
+      - id: actionlint
