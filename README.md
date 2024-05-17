@@ -6,6 +6,9 @@
 This action adds the [`conda`](https://conda.io/projects/conda/en/latest/user-guide/tasks/index.html)
 command from the on the worker preinstalled miniconda version to the known shell commands.
 
+> [!CAUTION]
+> This action [is known to currently not work with macOS runner-images newer than `macOS-12` (i.e. `macOS-latest`)](https://github.com/s-weigand/setup-conda/issues/432).
+
 ## Inputs
 
 | Name             | Requirement | Default     | Description                                                                                                                                                          |
@@ -71,7 +74,13 @@ jobs:
       - run: which python
 ```
 
-## Contributors ✨
+# Similar projects
+
+- [conda-incubator/setup-miniconda](https://github.com/conda-incubator/setup-miniconda)
+- [mamba-org/setup-micromamba](https://github.com/mamba-org/setup-micromamba)
+- [prefix-dev/setup-pixi](https://github.com/prefix-dev/setup-pixi)
+
+# Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
@@ -93,6 +102,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/wvxvw"><img src="https://avatars.githubusercontent.com/u/3147276?v=4?s=100" width="100px;" alt="wvxvw"/><br /><sub><b>wvxvw</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Awvxvw" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://violafanfani.github.io/"><img src="https://avatars.githubusercontent.com/u/35488779?v=4?s=100" width="100px;" alt="violafanfani"/><br /><sub><b>violafanfani</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Aviolafanfani" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://phdru.name/"><img src="https://avatars.githubusercontent.com/u/730158?v=4?s=100" width="100px;" alt="Oleg Broytman"/><br /><sub><b>Oleg Broytman</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Aphdru" title="Bug reports">🐛</a> <a href="https://github.com/s-weigand/setup-conda/commits?author=phdru" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://loicpauleve.name"><img src="https://avatars.githubusercontent.com/u/228657?v=4?s=100" width="100px;" alt="Loïc Paulevé"/><br /><sub><b>Loïc Paulevé</b></sub></a><br /><a href="https://github.com/s-weigand/setup-conda/issues?q=author%3Apauleve" title="Bug reports">🐛</a></td>
     </tr>
   </tbody>
 </table>
