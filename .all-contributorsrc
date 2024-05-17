@@ -100,6 +100,15 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "pauleve",
+      "name": "Loïc Paulevé",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228657?v=4",
+      "profile": "https://loicpauleve.name",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
