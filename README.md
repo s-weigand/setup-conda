@@ -6,6 +6,9 @@
 This action adds the [`conda`](https://conda.io/projects/conda/en/latest/user-guide/tasks/index.html)
 command from the on the worker preinstalled miniconda version to the known shell commands.
 
+> [!CAUTION]
+> This action [is known to currently not work with macOS runner-images newer than `macOS-12` (i.e. `macOS-latest`)](https://github.com/s-weigand/setup-conda/issues/432).
+
 ## Inputs
 
 | Name             | Requirement | Default     | Description                                                                                                                                                          |
