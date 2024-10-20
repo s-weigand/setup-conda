@@ -109,6 +109,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "giumas",
+      "name": "giumas",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2849257?v=4",
+      "profile": "http://www.hydroffice.org",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
