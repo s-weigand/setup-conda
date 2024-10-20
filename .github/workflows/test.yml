@@ -10,6 +10,15 @@ on:
   workflow_dispatch:
 
 jobs:
+  debug:
+    runs-on: windows-latest
+    steps:
+      - name: Show conda.bat
+        shell: bash
+        run: |
+          cat C:/Miniconda/Library/bin/conda.bat
+          cat C:/Miniconda/condabin/conda.bat
+
   pre-commit:
     runs-on: ubuntu-latest
     steps:

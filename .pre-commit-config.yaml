@@ -27,7 +27,7 @@ repos:
         exclude: '.all-contributorsrc'
 
   - repo: https://github.com/PyCQA/docformatter
-    rev: v1.7.5
+    rev: 06907d0
     hooks:
       - id: docformatter
         additional_dependencies: [tomli]
