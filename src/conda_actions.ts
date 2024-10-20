@@ -42,10 +42,10 @@ const sane_add_path = (path_to_add: string): void => {
  */
 const add_bin_dir = (python_dist_dir: string, config: ConfigObject): void => {
   if (config.os === "win32") {
-    sane_add_path(join(python_dist_dir, "Scripts"));
-    sane_add_path(join(python_dist_dir, "Library", "bin"));
-    sane_add_path(join(python_dist_dir, "usr", "Library", "bin"));
     sane_add_path(join(python_dist_dir, "mingw-w64", "Library", "bin"));
+    sane_add_path(join(python_dist_dir, "usr", "Library", "bin"));
+    sane_add_path(join(python_dist_dir, "Library", "bin"));
+    sane_add_path(join(python_dist_dir, "Scripts"));
   } else {
     sane_add_path(join(python_dist_dir, "bin"));
   }
