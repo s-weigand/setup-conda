@@ -40,7 +40,7 @@
     "@vercel/ncc": "^0.38.2",
     "jest": "^29.7.0",
     "jest-circus": "^29.7.0",
-    "npm-check-updates": "^17.1.4",
+    "npm-check-updates": "^17.1.13",
     "ts-jest": "^29.2.5",
     "typescript": "^5.6.3"
   }
