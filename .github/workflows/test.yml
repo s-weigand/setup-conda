@@ -53,7 +53,7 @@ jobs:
       CONDA_CHANNELS: 'defaults'
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-12]
+        os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v4
       - name: Prepare tests
@@ -92,7 +92,7 @@ jobs:
       ENV_PYTHON: 3.8
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-12]
+        os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v4
       - name: Prepare tests
@@ -135,7 +135,7 @@ jobs:
       ENV_PYTHON: 3.8
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-12]
+        os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v4
       - name: Prepare tests
@@ -179,7 +179,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-12]
+        os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v4
       - name: Prepare tests
@@ -217,7 +217,7 @@ jobs:
     needs: jest-tests
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-12]
+        os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v4
       - name: Prepare tests
@@ -255,7 +255,7 @@ jobs:
     needs: jest-tests
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-12]
+        os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v4
       - name: Prepare tests
@@ -291,7 +291,7 @@ jobs:
     needs: jest-tests
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-12]
+        os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v4
       - name: Download built dist
@@ -330,7 +330,7 @@ jobs:
       PYPY_TEST: true
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-12]
+        os: [ubuntu-latest, windows-latest]
         pypy-ver: ['pypy3.7']
         include:
           - os: ubuntu-latest
