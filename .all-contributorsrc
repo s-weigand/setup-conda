@@ -118,6 +118,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "kujaku11",
+      "name": "JP",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2100870?v=4",
+      "profile": "https://github.com/kujaku11",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
