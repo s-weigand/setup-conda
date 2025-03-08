@@ -233,6 +233,8 @@ const add_conda_channels = async (config: ConfigObject): Promise<void> => {
         await exec("conda", ["config", "--add", "channels", channel]);
       }
     }
+    console.log("Conda channels are:");
+    await exec("conda", ["config", "--show", "channels"]);
     endGroup();
   }
 };
