@@ -8,12 +8,8 @@ describe("Parse env activation output", () => {
     const activationStr = readFileSync(
       resolve(__dirname, "data/linux_conda_bash_activation.sh"),
     ).toString("utf8");
-    const { condaPaths, envVars } = await parseActivationScriptOutput(
-      activationStr,
-      "export ",
-      ":",
-    );
-    expect(condaPaths.length).toBe(3);
+    const { condaPaths, envVars } = await parseActivationScriptOutput(activationStr, "export", ":");
+    expect(condaPaths.length).toBe(4);
     expect(envVars.CONDA_PREFIX).toBe("/usr/share/miniconda/envs/__setup_conda");
     expect(envVars).not.toHaveProperty("CONDA_SHLVL");
     expect(envVars.CONDA_DEFAULT_ENV).toBe("__setup_conda");
@@ -27,11 +23,7 @@ describe("Parse env activation output", () => {
     const activationStr = readFileSync(
       resolve(__dirname, "data/mac_conda_bash_activation.sh"),
     ).toString("utf8");
-    const { condaPaths, envVars } = await parseActivationScriptOutput(
-      activationStr,
-      "export ",
-      ":",
-    );
+    const { condaPaths, envVars } = await parseActivationScriptOutput(activationStr, "export", ":");
     expect(condaPaths.length).toBe(3);
     expect(envVars.CONDA_PREFIX).toBe("/usr/local/miniconda/envs/__setup_conda");
     expect(envVars).not.toHaveProperty("CONDA_SHLVL");
@@ -47,7 +39,7 @@ describe("Parse env activation output", () => {
       resolve(__dirname, "data/windows_conda_powershell_activation.ps1"),
     ).toString("utf8");
     const { condaPaths, envVars } = await parseActivationScriptOutput(activationStr, "$Env:", ";");
-    expect(condaPaths.length).toBe(9);
+    expect(condaPaths.length).toBe(10);
     expect(envVars.CONDA_PREFIX).toBe("C:\\Miniconda\\envs\\__setup_conda");
     expect(envVars).not.toHaveProperty("CONDA_SHLVL");
     expect(envVars.CONDA_DEFAULT_ENV).toBe("__setup_conda");
