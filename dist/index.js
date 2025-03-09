@@ -11522,6 +11522,14 @@ const { isUint8Array, isArrayBuffer } = __nccwpck_require__(8253)
 const { File: UndiciFile } = __nccwpck_require__(3041)
 const { parseMIMEType, serializeAMimeType } = __nccwpck_require__(4322)
 
+let random
+try {
+  const crypto = __nccwpck_require__(7598)
+  random = (max) => crypto.randomInt(0, max)
+} catch {
+  random = (max) => Math.floor(Math.random(max))
+}
+
 let ReadableStream = globalThis.ReadableStream
 
 /** @type {globalThis['File']} */
@@ -11607,7 +11615,7 @@ function extractBody (object, keepalive = false) {
     // Set source to a copy of the bytes held by object.
     source = new Uint8Array(object.buffer.slice(object.byteOffset, object.byteOffset + object.byteLength))
   } else if (util.isFormDataLike(object)) {
-    const boundary = `----formdata-undici-0${`${Math.floor(Math.random() * 1e11)}`.padStart(11, '0')}`
+    const boundary = `----formdata-undici-0${`${random(1e11)}`.padStart(11, '0')}`
     const prefix = `--${boundary}\r\nContent-Disposition: form-data`
 
     /*! formdata-polyfill. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> */
@@ -25727,23 +25735,33 @@ exports.addCondaToPath = addCondaToPath;
  * @returns condaPaths
  */
 const parseActivationScriptOutput = (activationStr, envExport, osPathSep) => __awaiter(void 0, void 0, void 0, function* () {
-    let condaPaths = [];
+    const condaPaths = [];
     const envVars = {};
-    const lines = activationStr.split(envExport);
+    const lines = activationStr.split(/\r?\n|\r|\n/g);
     for (const line of lines) {
-        if (line.startsWith("PATH")) {
-            const paths = line.replace(/PATH\s?=|'|"|\n|\s/g, "").split(osPathSep);
-            condaPaths = paths
-                .filter((path) => path.toLowerCase().indexOf("miniconda") !== -1)
-                .filter((orig, index, self) => index === self.findIndex((subSetItem) => subSetItem === orig));
-        }
-        else {
-            // eslint-disable-next-line prefer-const
-            let [varName, varValue] = line.replace(/\s?=\s?/g, "=").split("=");
-            if (varValue !== undefined && varName !== "CONDA_SHLVL") {
-                varValue = varValue.replace(/('|")?\r?\n$/gm, "").replace(/^'|"/gm, "");
-                envVars[`${varName}`] = varValue;
+        if (line.startsWith(envExport)) {
+            const sanitizedLine = line.replace(envExport, "").trim();
+            if (sanitizedLine.startsWith("PATH")) {
+                const paths = sanitizedLine.replace(/PATH\s?=|'|"|\n|\s/g, "").split(osPathSep);
+                condaPaths.push(...paths
+                    .filter((path) => path.toLowerCase().indexOf("miniconda") !== -1)
+                    .filter((orig, index, self) => index === self.findIndex((subSetItem) => subSetItem === orig)));
             }
+            else {
+                const [varName, varValue] = sanitizedLine.replace(/\s?=\s?/g, "=").split("=");
+                if (varValue !== undefined && varName !== "CONDA_SHLVL") {
+                    const sanitizedValue = varValue.replace(/('|")?$/gm, "").replace(/^'|"/gm, "");
+                    if (sanitizedValue === "$null") {
+                        envVars[varName] = "";
+                    }
+                    else {
+                        envVars[varName] = sanitizedValue;
+                    }
+                }
+            }
+        }
+        if (line.startsWith("unset")) {
+            envVars[line.replace("unset", "").trim()] = "";
         }
     }
     return { condaPaths, envVars };
@@ -25772,7 +25790,7 @@ const activate_conda = (config) => __awaiter(void 0, void 0, void 0, function* (
     }
     else {
         yield (0, exec_1.exec)("conda", ["shell.bash", "activate", condaEnvName], options);
-        parsedActivationScript = yield (0, exports.parseActivationScriptOutput)(activationStr, "export ", ":");
+        parsedActivationScript = yield (0, exports.parseActivationScriptOutput)(activationStr, "export", ":");
     }
     const condaPaths = parsedActivationScript.condaPaths.sort((a, _) => a.indexOf("envs"));
     console.log("\n\nData used for activation:\n", {
@@ -25838,6 +25856,8 @@ const add_conda_channels = (config) => __awaiter(void 0, void 0, void 0, functio
                 yield (0, exec_1.exec)("conda", ["config", "--add", "channels", channel]);
             }
         }
+        console.log("Conda channels are:");
+        yield (0, exec_1.exec)("conda", ["config", "--show", "channels"]);
         (0, core_1.endGroup)();
     }
 });
@@ -26082,6 +26102,14 @@ module.exports = require("https");
 
 "use strict";
 module.exports = require("net");
+
+/***/ }),
+
+/***/ 7598:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:crypto");
 
 /***/ }),
 
