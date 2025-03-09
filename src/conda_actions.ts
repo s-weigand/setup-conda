@@ -102,25 +102,36 @@ export const parseActivationScriptOutput = async (
   envExport: string,
   osPathSep: string,
 ): Promise<ParsedActivationScript> => {
-  let condaPaths: string[] = [];
+  const condaPaths: string[] = [];
   const envVars: { [name: string]: string } = {};
-  const lines = activationStr.split(envExport);
+  const lines = activationStr.split(/\r?\n|\r|\n/g);
   for (const line of lines) {
-    if (line.startsWith("PATH")) {
-      const paths = line.replace(/PATH\s?=|'|"|\n|\s/g, "").split(osPathSep);
-      condaPaths = paths
-        .filter((path) => path.toLowerCase().indexOf("miniconda") !== -1)
-        .filter(
-          (orig, index, self) => index === self.findIndex((subSetItem) => subSetItem === orig),
+    if (line.startsWith(envExport)) {
+      const sanitizedLine = line.replace(envExport, "").trim();
+      if (sanitizedLine.startsWith("PATH")) {
+        const paths = sanitizedLine.replace(/PATH\s?=|'|"|\n|\s/g, "").split(osPathSep);
+        condaPaths.push(
+          ...paths
+            .filter((path) => path.toLowerCase().indexOf("miniconda") !== -1)
+            .filter(
+              (orig, index, self) => index === self.findIndex((subSetItem) => subSetItem === orig),
+            ),
         );
-    } else {
-      // eslint-disable-next-line prefer-const
-      let [varName, varValue] = line.replace(/\s?=\s?/g, "=").split("=");
+      } else {
+        const [varName, varValue] = sanitizedLine.replace(/\s?=\s?/g, "=").split("=");
 
-      if (varValue !== undefined && varName !== "CONDA_SHLVL") {
-        varValue = varValue.replace(/('|")?\r?\n$/gm, "").replace(/^'|"/gm, "");
-        envVars[`${varName}`] = varValue;
+        if (varValue !== undefined && varName !== "CONDA_SHLVL") {
+          const sanitizedValue = varValue.replace(/('|")?$/gm, "").replace(/^'|"/gm, "");
+          if (sanitizedValue === "$null") {
+            envVars[varName] = "";
+          } else {
+            envVars[varName] = sanitizedValue;
+          }
+        }
       }
+    }
+    if (line.startsWith("unset")) {
+      envVars[line.replace("unset", "").trim()] = "";
     }
   }
   return { condaPaths, envVars };
@@ -149,7 +160,7 @@ const activate_conda = async (config: ConfigObject): Promise<void> => {
     parsedActivationScript = await parseActivationScriptOutput(activationStr, "$Env:", ";");
   } else {
     await exec("conda", ["shell.bash", "activate", condaEnvName], options);
-    parsedActivationScript = await parseActivationScriptOutput(activationStr, "export ", ":");
+    parsedActivationScript = await parseActivationScriptOutput(activationStr, "export", ":");
   }
   const condaPaths = parsedActivationScript.condaPaths.sort((a, _) => a.indexOf("envs"));
   console.log("\n\nData used for activation:\n", {
@@ -222,6 +233,8 @@ const add_conda_channels = async (config: ConfigObject): Promise<void> => {
         await exec("conda", ["config", "--add", "channels", channel]);
       }
     }
+    console.log("Conda channels are:");
+    await exec("conda", ["config", "--show", "channels"]);
     endGroup();
   }
 };
