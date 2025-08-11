@@ -61,7 +61,7 @@ jobs:
           python --version
           python integrationtests/prepare_tests.py
       - name: Download built dist
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: dist-built
           path: dist
@@ -100,7 +100,7 @@ jobs:
           python --version
           python integrationtests/prepare_tests.py
       - name: Download built dist
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: dist-built
           path: dist
@@ -143,7 +143,7 @@ jobs:
           python --version
           python integrationtests/prepare_tests.py
       - name: Download built dist
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: dist-built
           path: dist
@@ -187,7 +187,7 @@ jobs:
           python --version
           python integrationtests/prepare_tests.py
       - name: Download built dist
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: dist-built
           path: dist
@@ -225,7 +225,7 @@ jobs:
           python --version
           python integrationtests/prepare_tests.py
       - name: Download built dist
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: dist-built
           path: dist
@@ -263,7 +263,7 @@ jobs:
           python --version
           python integrationtests/prepare_tests.py
       - name: Download built dist
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: dist-built
           path: dist
@@ -295,7 +295,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Download built dist
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: dist-built
           path: dist
@@ -338,7 +338,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Download built dist
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: dist-built
           path: dist
