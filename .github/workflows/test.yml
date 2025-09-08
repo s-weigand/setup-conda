@@ -16,7 +16,7 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: 3.8
       - name: Create fake release file for actionlint
@@ -300,7 +300,7 @@ jobs:
           name: dist-built
           path: dist
       - name: Set up Python 3.8
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: 3.8
       - name: Prepare tests
